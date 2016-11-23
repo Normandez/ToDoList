@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    addnewtask.cpp
+    addnewtask.cpp \
+    event.cpp
 
 HEADERS  += mainwindow.h \
-    addnewtask.h
+    addnewtask.h \
+    event.h
 
 FORMS    += mainwindow.ui \
     addnewtask.ui
