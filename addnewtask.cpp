@@ -1,11 +1,18 @@
 #include "addnewtask.h"
+#include "mainwindow.h"
 #include "ui_addnewtask.h"
+#include <QMessageBox>
 
-AddNewTask::AddNewTask(QWidget *parent) :
+
+
+
+AddNewTask::AddNewTask(QWidget *parent, QString *newName) :
     QDialog(parent),
     ui(new Ui::AddNewTask)
 {
     ui->setupUi(this);
+
+    Name = newName;
 
     //Инициализация комбобокса с повторением события
     ui->comboBoxRepeat->addItem("Однократно");
@@ -37,6 +44,8 @@ AddNewTask::AddNewTask(QWidget *parent) :
     //
 }
 
+
+
 AddNewTask::~AddNewTask()
 {
     delete ui;
@@ -61,6 +70,8 @@ void AddNewTask::on_checkBox_toggled(bool checked)
         ui->dateEditFinishDate->setGeometry(pointFinishDate.x(), pointFinishDate.y(), 181, ui->dateEditFinishDate->height());
         ui->groupBoxStart->setGeometry(pointGroupBoxStart.x(), pointGroupBoxStart.y(), 183, ui->groupBoxStart->height());
         ui->groupBoxFinish->setGeometry(pointGroupBoxFinish.x(), pointGroupBoxFinish.y(), 183, ui->groupBoxFinish->height());
+
+        ui->dateEditFinishDate->setDate(ui->dateEditStartDate->date());     //Устанавливаем одинаковые даты
     }
     //
         //Показываем ввод времени
@@ -83,5 +94,38 @@ void AddNewTask::on_checkBox_toggled(bool checked)
 void AddNewTask::on_pushButtonCancel_clicked()
 {
     close();
+}
+//
+
+
+
+//Кнопка "ОК"
+void AddNewTask::on_pushButtonOK_clicked()
+{
+    *Name = ui->lineEditName->text();
+
+    close();
+}
+//
+
+
+
+//Обработка недопущения ввода конечной даты раньше начальной
+void AddNewTask::on_dateEditFinishDate_dateChanged(const QDate &date)
+{
+    if (date < ui->dateEditStartDate->date()) ui->dateEditFinishDate->setDate(ui->dateEditStartDate->date());
+}
+//
+
+
+
+//Обработка недопущения ввода конечного времени раньше начального в случае события в один и тот же день
+void AddNewTask::on_dateTimeEditFinishTime_timeChanged(const QTime &time)
+{
+    if (ui->dateEditStartDate->date() == ui->dateEditFinishDate->date()
+            && time < ui->dateTimeEditStartTime->time())
+    {
+        ui->dateTimeEditFinishTime->setTime(ui->dateTimeEditStartTime->time());
+    }
 }
 //

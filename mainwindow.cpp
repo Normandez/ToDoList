@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "addnewtask.h"
+#include <QMessageBox>
 
 
 
@@ -26,7 +27,7 @@ MainWindow::~MainWindow()
 //Функция открытия окна добавления новой задачи
 void MainWindow::AddTask ()
 {
-    AddNewTask *AddTaskWindow = new AddNewTask(this);
+    AddNewTask *AddTaskWindow = new AddNewTask(this, &nameOfTask);
     AddTaskWindow->exec();
 }
 //
@@ -46,5 +47,16 @@ void MainWindow::on_pushButtonAddTask_Main_clicked()
 void MainWindow::on_pushButtonAddTask_OnWidget_clicked()
 {
     AddTask();
+}
+//
+
+
+
+//Кнопка "Сегодня"
+void MainWindow::on_pushButtonToday_clicked()
+{
+    QDate today = QDate::currentDate();;
+    ui->calendarWidget->setSelectedDate(today);
+    ui->calendarWidget->setFocus();
 }
 //
