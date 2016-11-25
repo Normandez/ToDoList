@@ -146,6 +146,13 @@ border: 1px solid;
     <property name="showGroupSeparator" stdset="0">
      <bool>false</bool>
     </property>
+    <property name="time">
+     <time>
+      <hour>10</hour>
+      <minute>0</minute>
+      <second>0</second>
+     </time>
+    </property>
     <property name="currentSection">
      <enum>QDateTimeEdit::HourSection</enum>
     </property>
@@ -211,6 +218,13 @@ border: 1px solid;
     </property>
     <property name="showGroupSeparator" stdset="0">
      <bool>false</bool>
+    </property>
+    <property name="time">
+     <time>
+      <hour>11</hour>
+      <minute>0</minute>
+      <second>0</second>
+     </time>
     </property>
     <property name="currentSection">
      <enum>QDateTimeEdit::HourSection</enum>
@@ -426,9 +440,6 @@ background-color: rgb(203, 203, 203);
      <number>0</number>
     </property>
    </widget>
-   <zorder>label_4</zorder>
-   <zorder>comboBoxRepeat</zorder>
-   <zorder>comboBoxRepeat</zorder>
   </widget>
   <widget class="QGroupBox" name="groupBoxNameRemind">
    <property name="geometry">

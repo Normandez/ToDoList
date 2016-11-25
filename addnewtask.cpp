@@ -2,17 +2,29 @@
 #include "mainwindow.h"
 #include "ui_addnewtask.h"
 #include <QMessageBox>
+#include <QDate>
+
+
+
+//ВНИМАНИЕ!!! Комментированные куски кода не трогать!
 
 
 
 
-AddNewTask::AddNewTask(QWidget *parent, QString *newName) :
+AddNewTask::AddNewTask(QWidget *parent, QString *newName, QDate *startDate, QString*Description) :
     QDialog(parent),
     ui(new Ui::AddNewTask)
 {
     ui->setupUi(this);
 
     Name = newName;
+    descript = Description;
+    sDate = startDate;
+
+    //Инициализация установки даты и времени
+    ui->dateEditStartDate->setDate(*sDate);
+    ui->dateEditFinishDate->setDate(*sDate);
+    //
 
     //Инициализация комбобокса с повторением события
     ui->comboBoxRepeat->addItem("Однократно");
@@ -103,6 +115,10 @@ void AddNewTask::on_pushButtonCancel_clicked()
 void AddNewTask::on_pushButtonOK_clicked()
 {
     *Name = ui->lineEditName->text();
+    QString buf;
+    buf = ui->plainTextEditDescription->toPlainText();
+    buf.replace("\n", " ");
+    *descript = buf;
 
     close();
 }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>520</width>
-    <height>571</height>
+    <width>517</width>
+    <height>606</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,97 +19,6 @@ background-color: rgb(247, 247, 247);
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QCalendarWidget" name="calendarWidget">
-    <property name="geometry">
-     <rect>
-      <x>5</x>
-      <y>32</y>
-      <width>511</width>
-      <height>411</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true"/>
-    </property>
-    <property name="gridVisible">
-     <bool>true</bool>
-    </property>
-    <property name="selectionMode">
-     <enum>QCalendarWidget::SingleSelection</enum>
-    </property>
-    <property name="horizontalHeaderFormat">
-     <enum>QCalendarWidget::ShortDayNames</enum>
-    </property>
-    <property name="verticalHeaderFormat">
-     <enum>QCalendarWidget::ISOWeekNumbers</enum>
-    </property>
-    <property name="navigationBarVisible">
-     <bool>true</bool>
-    </property>
-    <property name="dateEditEnabled">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QListView" name="listView">
-    <property name="geometry">
-     <rect>
-      <x>6</x>
-      <y>443</y>
-      <width>509</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
-    </property>
-    <property name="lineWidth">
-     <number>1</number>
-    </property>
-    <property name="midLineWidth">
-     <number>0</number>
-    </property>
-    <property name="verticalScrollBarPolicy">
-     <enum>Qt::ScrollBarAsNeeded</enum>
-    </property>
-    <property name="autoScroll">
-     <bool>false</bool>
-    </property>
-    <property name="textElideMode">
-     <enum>Qt::ElideRight</enum>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonAddTask_OnWidget">
-    <property name="geometry">
-     <rect>
-      <x>117</x>
-      <y>483</y>
-      <width>41</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton{
-border:1px solid;
-border-color: rgb(140, 140, 140);
-color: rgb(140, 140, 140);
-}</string>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-    <property name="autoDefault">
-     <bool>false</bool>
-    </property>
-    <property name="default">
-     <bool>false</bool>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButtonToday">
     <property name="geometry">
      <rect>
@@ -136,23 +45,241 @@ color: rgb(140, 140, 140);
      <string>Добавить задачу</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QTabWidget" name="tabWidgetMain">
     <property name="geometry">
      <rect>
-      <x>167</x>
-      <y>477</y>
-      <width>241</width>
-      <height>31</height>
+      <x>4</x>
+      <y>30</y>
+      <width>511</width>
+      <height>541</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true">QLabel{
+    <property name="tabPosition">
+     <enum>QTabWidget::South</enum>
+    </property>
+    <property name="tabShape">
+     <enum>QTabWidget::Rounded</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="usesScrollButtons">
+     <bool>false</bool>
+    </property>
+    <property name="documentMode">
+     <bool>true</bool>
+    </property>
+    <property name="tabsClosable">
+     <bool>false</bool>
+    </property>
+    <property name="movable">
+     <bool>true</bool>
+    </property>
+    <property name="tabBarAutoHide">
+     <bool>false</bool>
+    </property>
+    <widget class="QWidget" name="tabCalendar">
+     <attribute name="title">
+      <string>Календарь</string>
+     </attribute>
+     <widget class="QCalendarWidget" name="calendarWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>511</width>
+        <height>411</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="gridVisible">
+       <bool>true</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QCalendarWidget::SingleSelection</enum>
+      </property>
+      <property name="horizontalHeaderFormat">
+       <enum>QCalendarWidget::ShortDayNames</enum>
+      </property>
+      <property name="verticalHeaderFormat">
+       <enum>QCalendarWidget::ISOWeekNumbers</enum>
+      </property>
+      <property name="navigationBarVisible">
+       <bool>true</bool>
+      </property>
+      <property name="dateEditEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonAddTask_OnWidget">
+      <property name="geometry">
+       <rect>
+        <x>113</x>
+        <y>451</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{
+border:1px solid;
+border-color: rgb(140, 140, 140);
 color: rgb(140, 140, 140);
 }</string>
-    </property>
-    <property name="text">
-     <string>Чтобы добавить задачу, нажмите кнопку &quot;+&quot;</string>
-    </property>
+      </property>
+      <property name="text">
+       <string>+</string>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listWidgetTasksForDay">
+      <property name="geometry">
+       <rect>
+        <x>1</x>
+        <y>411</y>
+        <width>509</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelAdd_OnCalendar">
+      <property name="geometry">
+       <rect>
+        <x>162</x>
+        <y>445</y>
+        <width>251</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+color: rgb(140, 140, 140);
+}</string>
+      </property>
+      <property name="text">
+       <string>Чтобы добавить задачу, нажмите на кнопку &quot;+&quot;</string>
+      </property>
+     </widget>
+     <zorder>listWidgetTasksForDay</zorder>
+     <zorder>calendarWidget</zorder>
+     <zorder>pushButtonAddTask_OnWidget</zorder>
+     <zorder>labelAdd_OnCalendar</zorder>
+    </widget>
+    <widget class="QWidget" name="tabTaskList">
+     <attribute name="title">
+      <string>Список задач</string>
+     </attribute>
+     <widget class="QTableWidget" name="tableWidgetMainTable">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>511</width>
+        <height>521</height>
+       </rect>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+      <property name="showGrid">
+       <bool>true</bool>
+      </property>
+      <property name="gridStyle">
+       <enum>Qt::SolidLine</enum>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+      <property name="cornerButtonEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="rowCount">
+       <number>0</number>
+      </property>
+      <property name="columnCount">
+       <number>6</number>
+      </property>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>150</number>
+      </attribute>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+     </widget>
+     <widget class="QPushButton" name="pushButtonAddTask_OnTable">
+      <property name="geometry">
+       <rect>
+        <x>106</x>
+        <y>232</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{
+border:1px solid;
+border-color: rgb(140, 140, 140);
+color: rgb(140, 140, 140);
+}</string>
+      </property>
+      <property name="text">
+       <string>+</string>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelAdd_OnTable">
+      <property name="geometry">
+       <rect>
+        <x>155</x>
+        <y>226</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel{
+color: rgb(140, 140, 140);
+}</string>
+      </property>
+      <property name="text">
+       <string>В данный момент нет задач. Чтобы добавить
+задачу, нажмите на кнопку &quot;+&quot;</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -160,7 +287,7 @@ color: rgb(140, 140, 140);
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>520</width>
+     <width>517</width>
      <height>21</height>
     </rect>
    </property>

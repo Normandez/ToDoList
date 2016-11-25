@@ -16,7 +16,7 @@ class AddNewTask : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddNewTask(QWidget *parent, QString *NewName);
+    explicit AddNewTask(QWidget *parent, QString *NewName, QDate *startDate, QString *Description);
     ~AddNewTask();
 
 private slots:
@@ -34,6 +34,8 @@ private:
     Ui::AddNewTask *ui;
 
     QString *Name;
+    QString *descript;
+    QDate *sDate;
 };
 
 #endif // ADDNEWTASK_H
