@@ -1,6 +1,7 @@
 #ifndef ADDNEWTASK_H
 #define ADDNEWTASK_H
 
+#include "event.h"
 #include <QDialog>
 
 
@@ -16,7 +17,7 @@ class AddNewTask : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddNewTask(QWidget *parent, QString *NewName, QDate *startDate, QString *Description);
+    explicit AddNewTask(QWidget *parent, QDate startDate, Event *objTask);
     ~AddNewTask();
 
 private slots:
@@ -33,9 +34,8 @@ private slots:
 private:
     Ui::AddNewTask *ui;
 
-    QString *Name;
-    QString *descript;
-    QDate *sDate;
+    Event *obj;
+    QDate sDate;
 };
 
 #endif // ADDNEWTASK_H

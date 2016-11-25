@@ -11,19 +11,18 @@
 
 
 
-AddNewTask::AddNewTask(QWidget *parent, QString *newName, QDate *startDate, QString*Description) :
+AddNewTask::AddNewTask(QWidget *parent, QDate startDate, Event *objTask) :
     QDialog(parent),
     ui(new Ui::AddNewTask)
 {
     ui->setupUi(this);
 
-    Name = newName;
-    descript = Description;
     sDate = startDate;
+    obj = objTask;
 
     //Инициализация установки даты и времени
-    ui->dateEditStartDate->setDate(*sDate);
-    ui->dateEditFinishDate->setDate(*sDate);
+    ui->dateEditStartDate->setDate(sDate);
+    ui->dateEditFinishDate->setDate(sDate);
     //
 
     //Инициализация комбобокса с повторением события
@@ -114,11 +113,11 @@ void AddNewTask::on_pushButtonCancel_clicked()
 //Кнопка "ОК"
 void AddNewTask::on_pushButtonOK_clicked()
 {
-    *Name = ui->lineEditName->text();
-    QString buf;
-    buf = ui->plainTextEditDescription->toPlainText();
+    QString buf = ui->plainTextEditDescription->toPlainText();
     buf.replace("\n", " ");
-    *descript = buf;
+
+    obj->SetData(ui->lineEditName->text(), ui->dateEditStartDate->date(), ui->dateEditFinishDate->date(),
+                 ui->dateTimeEditStartTime->time(), ui->dateTimeEditFinishTime->time(), buf);
 
     close();
 }

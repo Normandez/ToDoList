@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "event.h"
 #include "addnewtask.h"
 #include <QMessageBox>
 #include <QTextCharFormat>
@@ -15,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Инициализация таблицы задач
     QStringList nameTableHeaders;
-    nameTableHeaders << "Название" << "Время начала" << "Время окончания" << "Кратность" << "Напоминание" << "Описание";
+    nameTableHeaders << "Название" << "Начало" << "Окончание" << "Кратность" << "Напоминание" << "Описание";
     ui->tableWidgetMainTable->setHorizontalHeaderLabels(nameTableHeaders);
     ui->tableWidgetMainTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     //
@@ -39,33 +40,18 @@ MainWindow::~MainWindow()
 //Функция открытия окна добавления новой задачи
 void MainWindow::AddTask ()
 {
-    startDate = ui->calendarWidget->selectedDate();
+    Event *task = new Event();      //Создаем объект класса задачи
 
-    AddNewTask *AddTaskWindow = new AddNewTask(this, &nameOfTask, &startDate, &descriptionOfTask);
+    AddNewTask *AddTaskWindow = new AddNewTask(this, ui->calendarWidget->selectedDate(), task);
     AddTaskWindow->exec();
 
-    ui->pushButtonAddTask_OnWidget->setVisible(false);
-    ui->pushButtonAddTask_OnTable->setVisible(false);
-    ui->labelAdd_OnCalendar->setVisible(false);
-    ui->labelAdd_OnTable->setVisible(false);
+    QColor color = QColor(rand()%255+1, rand()%255+1, rand()%255+1);        //Случайный выбор цвета
 
-    QColor color = QColor(rand()%255+1, rand()%255+1, rand()%255+1);
-    QTextCharFormat formatCalendar;
-    formatCalendar.setBackground(color);
-    ui->calendarWidget->setDateTextFormat(startDate, formatCalendar);
+    FillCalendar(task, color);      //Заполнение календаря
 
-    QListWidgetItem *item =new QListWidgetItem("Задача: '" + nameOfTask.toUpper() + "'\n\nОписание:\n" + descriptionOfTask);
-    item->setBackground(color);
+    if (doubleClickChk) {FillListUnderCalendar(task, color); doubleClickChk = false;}     //Заполнения списка под календарем
 
-    ui->listWidgetTasksForDay->addItem(item);
-
-    ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());
-    QTableWidgetItem *tableItemName = new QTableWidgetItem (nameOfTask);
-    QTableWidgetItem *tableItemDescription = new QTableWidgetItem (descriptionOfTask);
-    QTableWidgetItem *tableItemStartDate = new QTableWidgetItem (startDate.toString().replace(" ", "/"));
-    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 0, tableItemName);
-    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 1, tableItemStartDate);
-    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 5, tableItemDescription);
+    FillTaskTable(task, color);
 }
 //
 
@@ -83,6 +69,8 @@ void MainWindow::on_pushButtonAddTask_Main_clicked()
 //Кнопка "+" на календаре
 void MainWindow::on_pushButtonAddTask_OnWidget_clicked()
 {
+    doubleClickChk = true;
+
     AddTask();
 }
 //
@@ -122,6 +110,8 @@ void MainWindow::on_tableWidgetMainTable_itemChanged()
 //Двойной клик на календарь
 void MainWindow::on_calendarWidget_activated()
 {
+    doubleClickChk = true;
+
     AddTask();
 }
 //
@@ -141,5 +131,129 @@ void MainWindow::CustomTask()
 void MainWindow::on_pushButtonCustomTask_clicked()
 {
     CustomTask();
+}
+//
+
+
+
+//Функция заполнения календаря задачами
+void MainWindow::FillCalendar(Event *task, QColor color)
+{
+    QTextCharFormat formatCalendar;
+    formatCalendar.setBackground(color);
+
+    QDate dateCount = task->GetStartDate();
+    int day = dateCount.day();
+    int month = dateCount.month();
+    int year = dateCount.year();
+    while (dateCount <= task->GetFinishDate())
+    {
+        ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+        day++;
+        if (day > dateCount.daysInMonth()) {month++; day = 1;}
+        if (month > 12) {year++; month = 1;}
+        dateCount.setDate(year, month, day);
+    }
+}
+//
+
+
+
+//Функция заполнения списка задач под календарем
+void MainWindow::FillListUnderCalendar(Event *task, QColor color)
+{
+    //Обработка видимости кнопок добавления задачи на полях отображения информации
+    ui->pushButtonAddTask_OnWidget->setVisible(false);
+    ui->pushButtonAddTask_OnTable->setVisible(false);
+    ui->labelAdd_OnCalendar->setVisible(false);
+    ui->labelAdd_OnTable->setVisible(false);
+    //
+
+    QListWidgetItem *item =new QListWidgetItem();
+
+    item->setText("Задача: '" + task->GetNameOfTask() + "'\n\nОписание:\n" + task->GetDescriptionOfTask());
+    item->setBackground(color);
+    ui->listWidgetTasksForDay->addItem(item);
+}
+//
+
+
+
+//Функция заполнения таблицы задач
+void MainWindow::FillTaskTable(Event *task, QColor color)
+{
+    ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки
+
+    //Создание айтемов
+    QTableWidgetItem *tableItemName = new QTableWidgetItem (task->GetNameOfTask());
+    tableItemName->setTextColor(color);
+    QTableWidgetItem *tableItemStartDate = new QTableWidgetItem (task->GetStartDate().toString("dd.MM.yyyy") + " в " + task->GetStartTime().toString("hh:mm"));
+    QTableWidgetItem *tableItemFinishDate = new QTableWidgetItem (task->GetFinishDate().toString("dd.MM.yyyy") + " в " + task->GetFinishTime().toString("hh:mm"));
+    QTableWidgetItem *tableItemDescription = new QTableWidgetItem (task->GetDescriptionOfTask());
+    //
+
+    //Установка айтемов
+    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 0, tableItemName);
+    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 1, tableItemStartDate);
+    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 2, tableItemFinishDate);
+    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 5, tableItemDescription);
+    //
+}
+//
+
+
+
+//Функция заполнения списка задач под календарем
+void MainWindow::on_calendarWidget_clicked(const QDate &date)
+{
+    QListWidgetItem *item =new QListWidgetItem();
+    int Row = 0;
+    QTextCharFormat formatCalendar = ui->calendarWidget->dateTextFormat(ui->calendarWidget->selectedDate());
+    while (Row < ui->tableWidgetMainTable->rowCount())
+    {
+        if (formatCalendar.background().color() == ui->tableWidgetMainTable->item(Row, 0)->textColor())
+        {
+            //Избежание повторения задач под календарем
+            for (short i = 0; i < ui->listWidgetTasksForDay->count(); i++)
+            {
+                if (ui->listWidgetTasksForDay->item(i)->backgroundColor() == formatCalendar.background().color()) return;
+            }
+            //
+
+            //Обработка видимости кнопок добавления задачи на полях отображения информации
+            ui->pushButtonAddTask_OnWidget->setVisible(false);
+            ui->pushButtonAddTask_OnTable->setVisible(false);
+            ui->labelAdd_OnCalendar->setVisible(false);
+            ui->labelAdd_OnTable->setVisible(false);
+            //
+
+            //Добавление задачи под календарь
+            item->setText("Задача: '" + ui->tableWidgetMainTable->item(Row, 0)->text() + "'\n\nОписание:\n" + ui->tableWidgetMainTable->item(Row, 5)->text());
+            item->setBackground(ui->tableWidgetMainTable->item(Row, 0)->textColor());
+            ui->listWidgetTasksForDay->addItem(item);
+            //
+            return;
+        }
+        else
+        {
+            //Обработка видимости кнопок добавления задачи на полях отображения информации
+            ui->pushButtonAddTask_OnWidget->setVisible(true);
+            ui->pushButtonAddTask_OnTable->setVisible(true);
+            ui->labelAdd_OnCalendar->setVisible(true);
+            ui->labelAdd_OnTable->setVisible(true);
+            ui->listWidgetTasksForDay->clear();
+            //
+        }
+        Row++;
+    }
+}
+//
+
+
+
+//Сброс списка задач под календарем во время смены даты
+void MainWindow::on_calendarWidget_selectionChanged()
+{
+    ui->listWidgetTasksForDay->clear();
 }
 //

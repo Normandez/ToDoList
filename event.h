@@ -1,17 +1,37 @@
 #ifndef EVENT_H
 #define EVENT_H
-#include <QString>
-struct date
+
+#include <QObject>
+#include <QDate>
+
+
+
+class Event : public QObject     //класс события
 {
-    short day, month, year;
-};
-class Event //класс события
-{
-    date date_of_start, date_of_end;
-    QString name, comment;
+    Q_OBJECT
+
+private:
+    QString nameOfTask;
+    QDate startDate;
+    QDate finishDate;
+    QTime startTime;
+    QTime finishTime;
+    //<???> repeatOfTask;
+    //<???> remindOfTask;
+    QString descriptionOfTask;      //описание задачи
+
 public:
-    Event(QString, date, date); //конструктор без комментария
-    Event(QString, date, date, QString); //конструктор с комментарием
+    explicit Event(); //конструктор без комментария
+    ~Event (){}
+    void SetData (QString name, QDate sDate, QDate fDate,
+                  QTime sTime, QTime fTime, QString descript);
+    QString GetNameOfTask();
+    QDate GetStartDate();
+    QDate GetFinishDate();
+    QTime GetStartTime();
+    QTime GetFinishTime();
+    QString GetDescriptionOfTask();
 };
 //
+
 #endif // EVENT_H

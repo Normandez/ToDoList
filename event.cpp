@@ -1,22 +1,87 @@
 #include "event.h"
-Event::Event(QString name_of_event, date ds, date de)
+QString GetNameOfTask();
+QDate GetStartDate();
+QDate GetFinishDate();
+QTime GetStartTime();
+QTime GetFinishTime();
+QString GetDescriptionOfTask();
+
+
+Event::Event()
 {
-    name = name_of_event;
-    date_of_start.day = ds.day;
-    date_of_start.month = ds.month;
-    date_of_start.year = ds.year;
-    date_of_end.day = de.day;
-    date_of_end.month = de.month;
-    date_of_end.year = de.year;
+    nameOfTask = "";
+    startDate = QDate::currentDate();
+    finishDate = QDate::currentDate();
+    startTime = QTime::currentTime();
+    finishTime = QTime::currentTime();
+    descriptionOfTask = "";
 }
-Event::Event(QString name_of_event, date ds, date de, QString com)
+
+
+
+//Функция заполнения данных
+void Event::SetData(QString name, QDate sDate, QDate fDate,
+                    QTime sTime, QTime fTime, QString descript)
 {
-    name = name_of_event;
-    date_of_start.day = ds.day;
-    date_of_start.month = ds.month;
-    date_of_start.year = ds.year;
-    date_of_end.day = de.day;
-    date_of_end.month = de.month;
-    date_of_end.year = de.year;
-    comment = com;
+    nameOfTask = name;
+    startDate = sDate;
+    finishDate = fDate;
+    startTime = sTime;
+    finishTime = fTime;
+    descriptionOfTask = descript;
 }
+//
+
+
+
+//Возврат названия задачи
+QString Event::GetNameOfTask()
+{
+    return nameOfTask;
+}
+//
+
+
+
+//Возврат нначальной даты задачи
+QDate Event::GetStartDate()
+{
+    return startDate;
+}
+//
+
+
+
+//Возврат конечной даты задачи
+QDate Event::GetFinishDate()
+{
+    return finishDate;
+}
+//
+
+
+
+//Возврат начального времени задачи
+QTime Event::GetStartTime()
+{
+    return startTime;
+}
+//
+
+
+
+//Возврат конечного времени задачи
+QTime Event::GetFinishTime()
+{
+    return finishTime;
+}
+//
+
+
+
+//Возврат описания задачи
+QString Event::GetDescriptionOfTask()
+{
+    return descriptionOfTask;
+}
+//
