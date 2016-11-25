@@ -23,6 +23,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void AddTask();
+    void CustomTask();
 
 private slots:
     void on_pushButtonAddTask_Main_clicked();
@@ -35,7 +36,9 @@ private slots:
 
     void on_pushButtonAddTask_OnTable_clicked();
 
-    void on_calendarWidget_activated(const QDate &date);
+    void on_calendarWidget_activated();
+
+    void on_pushButtonCustomTask_clicked();
 
 private:
     Ui::MainWindow *ui;

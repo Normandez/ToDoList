@@ -37,7 +37,7 @@ background-color: rgb(247, 247, 247);
      <rect>
       <x>95</x>
       <y>4</y>
-      <width>121</width>
+      <width>131</width>
       <height>23</height>
      </rect>
     </property>
@@ -280,6 +280,19 @@ color: rgb(140, 140, 140);
       </property>
      </widget>
     </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButtonCustomTask">
+    <property name="geometry">
+     <rect>
+      <x>384</x>
+      <y>4</y>
+      <width>131</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Изменить задачу</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

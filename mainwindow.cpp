@@ -120,8 +120,26 @@ void MainWindow::on_tableWidgetMainTable_itemChanged()
 
 
 //Двойной клик на календарь
-void MainWindow::on_calendarWidget_activated(const QDate &date)
+void MainWindow::on_calendarWidget_activated()
 {
     AddTask();
+}
+//
+
+
+
+//Вункция изменения задачи
+void MainWindow::CustomTask()
+{
+
+}
+//
+
+
+
+//Кнопка "Изменить задачу"
+void MainWindow::on_pushButtonCustomTask_clicked()
+{
+    CustomTask();
 }
 //
