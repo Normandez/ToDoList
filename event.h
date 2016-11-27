@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDate>
+#include <QColor>
 
 
 
@@ -19,18 +20,21 @@ private:
     //<???> repeatOfTask;
     //<???> remindOfTask;
     QString descriptionOfTask;      //описание задачи
+    QColor color;
 
 public:
-    explicit Event(); //конструктор без комментария
+    Event(); //конструктор без комментария
     ~Event (){}
     void SetData (QString name, QDate sDate, QDate fDate,
                   QTime sTime, QTime fTime, QString descript);
+    void SetColor (QColor clr);
     QString GetNameOfTask();
     QDate GetStartDate();
     QDate GetFinishDate();
     QTime GetStartTime();
     QTime GetFinishTime();
     QString GetDescriptionOfTask();
+    QColor GetColor();
 };
 //
 

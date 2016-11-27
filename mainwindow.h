@@ -4,6 +4,7 @@
 #include "event.h"
 #include <QMainWindow>
 #include <QDate>
+#include <QVector>
 
 
 
@@ -21,10 +22,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void AddTask();
-    void CustomTask();
-    void FillCalendar(Event *task, QColor color);
+    void CustomTask(QString nameTask);
+    void FillCalendar();
     void FillListUnderCalendar(Event *task, QColor color);
-    void FillTaskTable(Event *task, QColor color);
+    void FillTaskTable();
 
 private slots:
     void on_pushButtonAddTask_Main_clicked();
@@ -49,6 +50,7 @@ private:
     Ui::MainWindow *ui;
 
     bool doubleClickChk = false;
+    QVector <Event*> eventsByPointer;
 };
 
 #endif // MAINWINDOW_H

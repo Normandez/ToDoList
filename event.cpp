@@ -34,6 +34,15 @@ void Event::SetData(QString name, QDate sDate, QDate fDate,
 
 
 
+//Установка цвета
+void Event::SetColor (QColor clr)
+{
+    color = clr;
+}
+//
+
+
+
 //Возврат названия задачи
 QString Event::GetNameOfTask()
 {
@@ -83,5 +92,14 @@ QTime Event::GetFinishTime()
 QString Event::GetDescriptionOfTask()
 {
     return descriptionOfTask;
+}
+//
+
+
+
+//Возврат цвета
+QColor Event::GetColor()
+{
+    return color;
 }
 //
