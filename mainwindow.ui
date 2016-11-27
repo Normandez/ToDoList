@@ -61,7 +61,7 @@ background-color: rgb(247, 247, 247);
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="usesScrollButtons">
      <bool>false</bool>
@@ -284,14 +284,27 @@ color: rgb(140, 140, 140);
    <widget class="QPushButton" name="pushButtonCustomTask">
     <property name="geometry">
      <rect>
-      <x>384</x>
-      <y>4</y>
+      <x>240</x>
+      <y>3</y>
       <width>131</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>Изменить задачу</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonDeleteTask">
+    <property name="geometry">
+     <rect>
+      <x>384</x>
+      <y>3</y>
+      <width>131</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Удалить задачу</string>
     </property>
    </widget>
   </widget>
@@ -304,6 +317,16 @@ color: rgb(140, 140, 140);
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -313,6 +336,30 @@ color: rgb(140, 140, 140);
     <bool>false</bool>
    </attribute>
   </widget>
+  <action name="actionOpen">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Открыть...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Сохранить как...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

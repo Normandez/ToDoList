@@ -57,6 +57,57 @@ AddNewTask::AddNewTask(QWidget *parent, QDate startDate, Event *objTask) :
 
 
 
+AddNewTask::AddNewTask(QWidget *parent, Event *objTask) :
+    QDialog(parent),
+    ui(new Ui::AddNewTask)
+{
+    ui->setupUi(this);
+
+    obj = objTask;
+
+    //Инициализация комбобокса с повторением события
+    ui->comboBoxRepeat->addItem("Однократно");
+    ui->comboBoxRepeat->addItem("Ежедневно");
+    ui->comboBoxRepeat->addItem("По будням");
+    ui->comboBoxRepeat->addItem("Еженедельно");
+    ui->comboBoxRepeat->addItem("Ежемесячно");
+    ui->comboBoxRepeat->addItem("Ежегодно");
+    //
+
+    //Инициализация комбобокса с временем до напоминания о событии
+    ui->comboBoxRemind->addItem("Нет");
+    ui->comboBoxRemind->addItem("За 1 минуту");
+    ui->comboBoxRemind->addItem("За 5 минут");
+    ui->comboBoxRemind->addItem("За 10 минут");
+    ui->comboBoxRemind->addItem("За 15 минут");
+    ui->comboBoxRemind->addItem("За 20 минут");
+    ui->comboBoxRemind->addItem("За 25 минут");
+    ui->comboBoxRemind->addItem("За 30 минут");
+    ui->comboBoxRemind->addItem("За 45 минут");
+    ui->comboBoxRemind->addItem("За 1 час");
+    ui->comboBoxRemind->addItem("За 2 часа");
+    ui->comboBoxRemind->addItem("За 3 часа");
+    ui->comboBoxRemind->addItem("За 12 часов");
+    ui->comboBoxRemind->addItem("За 1 день");
+    ui->comboBoxRemind->addItem("За 2 дня");
+    ui->comboBoxRemind->addItem("За 1 неделю");
+    //ui->comboBoxRemind->addItem("Настроить"); Можно оставить как расширение функционала на потом
+    //
+
+    //Подгонка интерфейса под заданное событие
+    ui->lineEditName->setText(obj->GetNameOfTask());
+    ui->dateEditStartDate->setDate(obj->GetStartDate());
+    ui->dateEditFinishDate->setDate(obj->GetFinishDate());
+    ui->dateTimeEditStartTime->setTime(obj->GetStartTime());
+    ui->dateTimeEditFinishTime->setTime(obj->GetFinishTime());
+    //<Установка кратности>
+    //<Установка напоминания>
+    ui->plainTextEditDescription->setPlainText(obj->GetDescriptionOfTask());
+    //
+}
+
+
+
 AddNewTask::~AddNewTask()
 {
     delete ui;

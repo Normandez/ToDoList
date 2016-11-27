@@ -18,6 +18,7 @@ class AddNewTask : public QDialog
 
 public:
     explicit AddNewTask(QWidget *parent, QDate startDate, Event *objTask);
+    explicit AddNewTask(QWidget *parent, Event *objTask);
     ~AddNewTask();
 
 private slots:

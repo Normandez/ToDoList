@@ -22,10 +22,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void AddTask();
-    void CustomTask(QString nameTask);
+    void CustomTask(QString nameTask, QColor colorTask);
     void FillCalendar();
     void FillListUnderCalendar(Event *task, QColor color);
     void FillTaskTable();
+    void ReadFromFile ();
+    void SaveToFile ();
+    void DeleteTask (QString nameTask, QColor colorTask);
 
 private slots:
     void on_pushButtonAddTask_Main_clicked();
@@ -45,6 +48,14 @@ private slots:
     void on_calendarWidget_clicked(const QDate &date);
 
     void on_calendarWidget_selectionChanged();
+
+    void on_actionOpen_triggered();
+
+    void on_actionSave_triggered();
+
+    void on_actionSaveAs_triggered();
+
+    void on_pushButtonDeleteTask_clicked();
 
 private:
     Ui::MainWindow *ui;
