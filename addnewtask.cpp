@@ -11,12 +11,17 @@
 
 
 
+<<<<<<< HEAD
 AddNewTask::AddNewTask(QWidget *parent, QString *newName, QDate *startDate, QString*Description) :
+=======
+AddNewTask::AddNewTask(QWidget *parent, QDate startDate, Event *objTask) :
+>>>>>>> b126979570160e1560f69ca775275d0c5a803563
     QDialog(parent),
     ui(new Ui::AddNewTask)
 {
     ui->setupUi(this);
 
+<<<<<<< HEAD
     Name = newName;
     descript = Description;
     sDate = startDate;
@@ -24,6 +29,14 @@ AddNewTask::AddNewTask(QWidget *parent, QString *newName, QDate *startDate, QStr
     //Инициализация установки даты и времени
     ui->dateEditStartDate->setDate(*sDate);
     ui->dateEditFinishDate->setDate(*sDate);
+=======
+    sDate = startDate;
+    obj = objTask;
+
+    //Инициализация установки даты и времени
+    ui->dateEditStartDate->setDate(sDate);
+    ui->dateEditFinishDate->setDate(sDate);
+>>>>>>> b126979570160e1560f69ca775275d0c5a803563
     //
 
     //Инициализация комбобокса с повторением события
@@ -58,6 +71,60 @@ AddNewTask::AddNewTask(QWidget *parent, QString *newName, QDate *startDate, QStr
 
 
 
+<<<<<<< HEAD
+=======
+AddNewTask::AddNewTask(QWidget *parent, Event *objTask) :
+    QDialog(parent),
+    ui(new Ui::AddNewTask)
+{
+    ui->setupUi(this);
+
+    obj = objTask;
+
+    //Инициализация комбобокса с повторением события
+    ui->comboBoxRepeat->addItem("Однократно");
+    ui->comboBoxRepeat->addItem("Ежедневно");
+    ui->comboBoxRepeat->addItem("По будням");
+    ui->comboBoxRepeat->addItem("Еженедельно");
+    ui->comboBoxRepeat->addItem("Ежемесячно");
+    ui->comboBoxRepeat->addItem("Ежегодно");
+    //
+
+    //Инициализация комбобокса с временем до напоминания о событии
+    ui->comboBoxRemind->addItem("Нет");
+    ui->comboBoxRemind->addItem("За 1 минуту");
+    ui->comboBoxRemind->addItem("За 5 минут");
+    ui->comboBoxRemind->addItem("За 10 минут");
+    ui->comboBoxRemind->addItem("За 15 минут");
+    ui->comboBoxRemind->addItem("За 20 минут");
+    ui->comboBoxRemind->addItem("За 25 минут");
+    ui->comboBoxRemind->addItem("За 30 минут");
+    ui->comboBoxRemind->addItem("За 45 минут");
+    ui->comboBoxRemind->addItem("За 1 час");
+    ui->comboBoxRemind->addItem("За 2 часа");
+    ui->comboBoxRemind->addItem("За 3 часа");
+    ui->comboBoxRemind->addItem("За 12 часов");
+    ui->comboBoxRemind->addItem("За 1 день");
+    ui->comboBoxRemind->addItem("За 2 дня");
+    ui->comboBoxRemind->addItem("За 1 неделю");
+    //ui->comboBoxRemind->addItem("Настроить"); Можно оставить как расширение функционала на потом
+    //
+
+    //Подгонка интерфейса под заданное событие
+    ui->lineEditName->setText(obj->GetNameOfTask());
+    ui->dateEditStartDate->setDate(obj->GetStartDate());
+    ui->dateEditFinishDate->setDate(obj->GetFinishDate());
+    ui->dateTimeEditStartTime->setTime(obj->GetStartTime());
+    ui->dateTimeEditFinishTime->setTime(obj->GetFinishTime());
+    //<Установка кратности>
+    //<Установка напоминания>
+    ui->plainTextEditDescription->setPlainText(obj->GetDescriptionOfTask());
+    //
+}
+
+
+
+>>>>>>> b126979570160e1560f69ca775275d0c5a803563
 AddNewTask::~AddNewTask()
 {
     delete ui;
@@ -114,11 +181,19 @@ void AddNewTask::on_pushButtonCancel_clicked()
 //Кнопка "ОК"
 void AddNewTask::on_pushButtonOK_clicked()
 {
+<<<<<<< HEAD
     *Name = ui->lineEditName->text();
     QString buf;
     buf = ui->plainTextEditDescription->toPlainText();
     buf.replace("\n", " ");
     *descript = buf;
+=======
+    QString buf = ui->plainTextEditDescription->toPlainText();
+    buf.replace("\n", " ");
+
+    obj->SetData(ui->lineEditName->text(), ui->dateEditStartDate->date(), ui->dateEditFinishDate->date(),
+                 ui->dateTimeEditStartTime->time(), ui->dateTimeEditFinishTime->time(), buf);
+>>>>>>> b126979570160e1560f69ca775275d0c5a803563
 
     close();
 }
