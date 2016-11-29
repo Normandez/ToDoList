@@ -41,6 +41,11 @@ void Event::SetColor (QColor clr)
 }
 //
 
+void Event::SetColor (QString scolor)
+{
+    color = scolor;
+}
+
 
 
 //Возврат названия задачи

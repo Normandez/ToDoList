@@ -36,6 +36,7 @@ public:
     QString GetDescriptionOfTask();
     QColor GetColor();
 
+    void SetColor (QString);
     void SetNameOfTask(QString);
     void SetStartDate(QString);
     void SetFinishDate(QString);

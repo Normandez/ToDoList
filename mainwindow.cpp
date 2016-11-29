@@ -8,6 +8,10 @@
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 #include <QXmlStreamAttribute>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QDebug>
 
 
 
@@ -365,7 +369,8 @@ void MainWindow::on_calendarWidget_selectionChanged()
 //Функция считывания данных из файла
 void MainWindow::ReadFromFile()
 {
-    Event obj;
+    //XML Чтение
+    /*Event obj;
     QFile file("D:/asdddd.xml");
     if(!file.open(QFile::ReadOnly | QFile::Text))
         QMessageBox::warning(this,
@@ -395,7 +400,40 @@ void MainWindow::ReadFromFile()
         }
         file.close();
     }
+    */
 
+    //JSON Чтение
+    Event obj;
+    QFile file("D:/asdddd.xml");
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qWarning("Couldn't open save file.");
+        return;
+    }
+
+    QByteArray saveData = file.readAll();
+    QJsonDocument loadDoc = QJsonDocument::fromJson(saveData);
+    QJsonObject json = loadDoc.object();
+
+    for(int i = 0; i < json["CountOfEvents"].toInt(); i++)
+    {
+        QJsonArray nEvent = json["Event_" + QString::number(i+1)].toArray();
+        QJsonArray data = nEvent[i].toArray();
+        for(int j = 0; j < 7; j++)
+        {
+            qDebug() << data[j].toString();
+            obj.SetNameOfTask(data[j].toString());
+            obj.SetStartDate(data[j].toString());
+            obj.SetFinishDate(data[j].toString());
+            obj.SetStartTime(data[j].toString());
+            obj.SetFinishTime(data[j].toString());
+            obj.SetDescriptionOfTask(data[j].toString());
+            obj.SetColor(data[j].toString());
+
+            eventsByPointer.push_back(&obj);
+        }
+    }
+    file.close();
 }
 //
 
@@ -405,7 +443,7 @@ void MainWindow::ReadFromFile()
 void MainWindow::SaveToFile()
 {
     //ЗАПИСЬ В XML ФАЙЛ
-    QFile file("D:/asdddd.xml");
+    /*QFile file("D:/asdddd.xml");
     file.open(QIODevice::WriteOnly);
 
     QXmlStreamWriter xmlWriter(&file);
@@ -430,12 +468,34 @@ void MainWindow::SaveToFile()
         xmlWriter.writeEndElement();
     }
     xmlWriter.writeEndDocument();
-    file.close();
+    file.close();*/
 
 
     //ЗАПИСЬ В JSON
+    QFile file("D:/asdddd.json");
+    if (!file.open(QIODevice::WriteOnly))
+    {
+        qWarning("Couldn't open save file.");
+        return;
+    }
 
-
+    QJsonObject json;
+    json["CountOfEvents"] = eventsByPointer.size();
+    for(int i = 0; i < eventsByPointer.size(); i++)
+    {
+        QJsonArray data;
+        data.append(eventsByPointer.at(i)->GetNameOfTask());
+        data.append(eventsByPointer.at(i)->GetStartDate().toString("yyyy.MM.dd"));
+        data.append(eventsByPointer.at(i)->GetFinishDate().toString("yyyy.MM.dd"));
+        data.append(eventsByPointer.at(i)->GetStartTime().toString("hh.mm"));
+        data.append(eventsByPointer.at(i)->GetFinishTime().toString("hh.mm"));
+        data.append(eventsByPointer.at(i)->GetDescriptionOfTask());
+        data.append(eventsByPointer.at(i)->GetColor().name());
+        json["Event_" + QString::number(i+1)] = data;
+    }
+    QJsonDocument saveDoc(json);
+    file.write(saveDoc.toJson());
+    file.close();
 }
 //
 
