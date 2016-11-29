@@ -11,18 +11,45 @@
 
 
 
+<<<<<<< HEAD
 AddNewTask::AddNewTask(QWidget *parent, QDate startDate, Event *objTask) :
+=======
+<<<<<<< HEAD
+AddNewTask::AddNewTask(QWidget *parent, QString *newName, QDate *startDate, QString*Description) :
+=======
+AddNewTask::AddNewTask(QWidget *parent, QDate startDate, Event *objTask) :
+>>>>>>> b126979570160e1560f69ca775275d0c5a803563
+>>>>>>> ForMerging
     QDialog(parent),
     ui(new Ui::AddNewTask)
 {
     ui->setupUi(this);
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    Name = newName;
+    descript = Description;
+>>>>>>> ForMerging
+    sDate = startDate;
+    obj = objTask;
+
+    //Инициализация установки даты и времени
+<<<<<<< HEAD
+    ui->dateEditStartDate->setDate(sDate);
+    ui->dateEditFinishDate->setDate(sDate);
+=======
+    ui->dateEditStartDate->setDate(*sDate);
+    ui->dateEditFinishDate->setDate(*sDate);
+=======
     sDate = startDate;
     obj = objTask;
 
     //Инициализация установки даты и времени
     ui->dateEditStartDate->setDate(sDate);
     ui->dateEditFinishDate->setDate(sDate);
+>>>>>>> b126979570160e1560f69ca775275d0c5a803563
+>>>>>>> ForMerging
     //
 
     //Инициализация комбобокса с повторением события
@@ -57,6 +84,11 @@ AddNewTask::AddNewTask(QWidget *parent, QDate startDate, Event *objTask) :
 
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> ForMerging
 AddNewTask::AddNewTask(QWidget *parent, Event *objTask) :
     QDialog(parent),
     ui(new Ui::AddNewTask)
@@ -108,6 +140,10 @@ AddNewTask::AddNewTask(QWidget *parent, Event *objTask) :
 
 
 
+<<<<<<< HEAD
+=======
+>>>>>>> b126979570160e1560f69ca775275d0c5a803563
+>>>>>>> ForMerging
 AddNewTask::~AddNewTask()
 {
     delete ui;
@@ -164,11 +200,27 @@ void AddNewTask::on_pushButtonCancel_clicked()
 //Кнопка "ОК"
 void AddNewTask::on_pushButtonOK_clicked()
 {
+<<<<<<< HEAD
     QString buf = ui->plainTextEditDescription->toPlainText();
     buf.replace("\n", " ");
 
     obj->SetData(ui->lineEditName->text(), ui->dateEditStartDate->date(), ui->dateEditFinishDate->date(),
                  ui->dateTimeEditStartTime->time(), ui->dateTimeEditFinishTime->time(), buf);
+=======
+<<<<<<< HEAD
+    *Name = ui->lineEditName->text();
+    QString buf;
+    buf = ui->plainTextEditDescription->toPlainText();
+    buf.replace("\n", " ");
+    *descript = buf;
+=======
+    QString buf = ui->plainTextEditDescription->toPlainText();
+    buf.replace("\n", " ");
+
+    obj->SetData(ui->lineEditName->text(), ui->dateEditStartDate->date(), ui->dateEditFinishDate->date(),
+                 ui->dateTimeEditStartTime->time(), ui->dateTimeEditFinishTime->time(), buf);
+>>>>>>> b126979570160e1560f69ca775275d0c5a803563
+>>>>>>> ForMerging
 
     close();
 }
