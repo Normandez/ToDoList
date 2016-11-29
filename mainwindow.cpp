@@ -1,15 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-<<<<<<< HEAD
-#include "event.h"
-=======
-<<<<<<< HEAD
->>>>>>> ForMerging
-#include "addnewtask.h"
-#include <QMessageBox>
-#include <QTextCharFormat>
-
-=======
 #include "event.h"
 #include "addnewtask.h"
 #include <QMessageBox>
@@ -22,7 +12,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
 
 
 
@@ -34,15 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Инициализация таблицы задач
     QStringList nameTableHeaders;
-<<<<<<< HEAD
     nameTableHeaders << "Название" << "Начало" << "Окончание" << "Кратность" << "Напоминание" << "Описание";
-=======
-<<<<<<< HEAD
-    nameTableHeaders << "Название" << "Время начала" << "Время окончания" << "Кратность" << "Напоминание" << "Описание";
-=======
-    nameTableHeaders << "Название" << "Начало" << "Окончание" << "Кратность" << "Напоминание" << "Описание";
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
     ui->tableWidgetMainTable->setHorizontalHeaderLabels(nameTableHeaders);
     ui->tableWidgetMainTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     //
@@ -66,37 +47,6 @@ MainWindow::~MainWindow()
 //Функция открытия окна добавления новой задачи
 void MainWindow::AddTask ()
 {
-<<<<<<< HEAD
-    Event *task = new Event();      //Создаем объект класса задачи
-=======
-<<<<<<< HEAD
-    startDate = ui->calendarWidget->selectedDate();
->>>>>>> ForMerging
-
-    AddNewTask *AddTaskWindow = new AddNewTask(this, ui->calendarWidget->selectedDate(), task);
-    AddTaskWindow->exec();
-
-    task->SetColor(QColor(rand()%255+1, rand()%255+1, rand()%255+1));       //Случайный выбор цвета
-
-    eventsByPointer.push_back(task);
-
-    FillCalendar();      //Заполнение календаря
-
-    if (doubleClickChk) {FillListUnderCalendar(task, task->GetColor()); doubleClickChk = false;}     //Заполнения списка под календарем
-
-    ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки
-
-<<<<<<< HEAD
-    FillTaskTable();        //Заполнение таблицы
-=======
-    ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());
-    QTableWidgetItem *tableItemName = new QTableWidgetItem (nameOfTask);
-    QTableWidgetItem *tableItemDescription = new QTableWidgetItem (descriptionOfTask);
-    QTableWidgetItem *tableItemStartDate = new QTableWidgetItem (startDate.toString().replace(" ", "/"));
-    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 0, tableItemName);
-    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 1, tableItemStartDate);
-    ui->tableWidgetMainTable->setItem(ui->tableWidgetMainTable->rowCount() - 1, 5, tableItemDescription);
-=======
     Event *task = new Event();      //Создаем объект класса задачи
 
     AddNewTask *AddTaskWindow = new AddNewTask(this, ui->calendarWidget->selectedDate(), task);
@@ -113,8 +63,6 @@ void MainWindow::AddTask ()
     ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки
 
     FillTaskTable();        //Заполнение таблицы
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
 }
 //
 
@@ -132,16 +80,8 @@ void MainWindow::on_pushButtonAddTask_Main_clicked()
 //Кнопка "+" на календаре
 void MainWindow::on_pushButtonAddTask_OnWidget_clicked()
 {
-<<<<<<< HEAD
     doubleClickChk = true;
 
-=======
-<<<<<<< HEAD
-=======
-    doubleClickChk = true;
-
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
     AddTask();
 }
 //
@@ -179,21 +119,6 @@ void MainWindow::on_tableWidgetMainTable_itemChanged()
 
 
 //Двойной клик на календарь
-<<<<<<< HEAD
-void MainWindow::on_calendarWidget_activated()
-=======
-<<<<<<< HEAD
-void MainWindow::on_calendarWidget_activated(const QDate &date)
->>>>>>> ForMerging
-{
-    doubleClickChk = true;
-
-    AddTask();
-}
-//
-<<<<<<< HEAD
-=======
-=======
 void MainWindow::on_calendarWidget_activated()
 {
     doubleClickChk = true;
@@ -201,7 +126,6 @@ void MainWindow::on_calendarWidget_activated()
     AddTask();
 }
 //
->>>>>>> ForMerging
 
 
 
@@ -445,13 +369,10 @@ void MainWindow::on_calendarWidget_selectionChanged()
 //Функция считывания данных из файла
 void MainWindow::ReadFromFile()
 {
-<<<<<<< HEAD
-
-=======
     //XML Чтение
-    /*Event obj;
-    QFile file("D:/asdddd.xml");
-    if(!file.open(QFile::ReadOnly | QFile::Text))
+    Event *objXML;
+    QFile fileXML("D:/asdddd.xml");
+    if(!fileXML.open(QFile::ReadOnly | QFile::Text))
         QMessageBox::warning(this,
                               "Ошибка файла",
                               "Не удалось открыть файл",
@@ -459,61 +380,71 @@ void MainWindow::ReadFromFile()
     else
     {
         QXmlStreamReader xmlReader;
-        xmlReader.setDevice(&file);
+        xmlReader.setDevice(&fileXML);
         xmlReader.readNext();
 
+        //<БАГ>ЗДЕСЬ ЦИКЛ РАБОТАЕТ НЕВЕРНО! НЕЗАВИСИМО ОТ КОЛИЧЕСТВА СОХРАНЕННЫХ ЭЛЕМЕНТОВ В ВЕКТОРЕ, В ИФ ЗАХОДИТ ВСЕГДА ВСЕГО 1 РАЗ!
         while(!xmlReader.atEnd())
         {
             if(xmlReader.isStartElement())
             {
-                obj.SetNameOfTask(xmlReader.readElementText());
-                obj.SetStartDate(xmlReader.readElementText());
-                obj.SetFinishDate(xmlReader.readElementText());
-                obj.SetStartTime(xmlReader.readElementText());
-                obj.SetFinishTime(xmlReader.readElementText());
-                obj.SetDescriptionOfTask(xmlReader.readElementText());
+                objXML = new Event ();
+                objXML->SetNameOfTask(xmlReader.readElementText());
+                objXML->SetStartDate(xmlReader.readElementText());
+                objXML->SetFinishDate(xmlReader.readElementText());
+                objXML->SetStartTime(xmlReader.readElementText());
+                objXML->SetFinishTime(xmlReader.readElementText());
+                objXML->SetDescriptionOfTask(xmlReader.readElementText());
 
-                eventsByPointer.push_back(&obj);
+                eventsByPointer.push_back(objXML);
+                ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
             }
             xmlReader.readNext();
         }
-        file.close();
-    }
-    */
+        //<БАГ>
+        fileXML.close();
 
-    //JSON Чтение
-    Event obj;
-    QFile file("D:/asdddd.xml");
-    if (!file.open(QIODevice::ReadOnly))
+        FillCalendar();
+        FillTaskTable();
+    }
+
+    /*//JSON Чтение
+    Event *objJSON;
+    QFile fileJSON("D:/asdddd.json");
+    if (!fileJSON.open(QIODevice::ReadOnly))
     {
         qWarning("Couldn't open save file.");
         return;
     }
 
-    QByteArray saveData = file.readAll();
+    QByteArray saveData = fileJSON.readAll();
     QJsonDocument loadDoc = QJsonDocument::fromJson(saveData);
     QJsonObject json = loadDoc.object();
 
     for(int i = 0; i < json["CountOfEvents"].toInt(); i++)
     {
+        objJSON  = new Event ();
         QJsonArray nEvent = json["Event_" + QString::number(i+1)].toArray();
         QJsonArray data = nEvent[i].toArray();
         for(int j = 0; j < 7; j++)
         {
-            qDebug() << data[j].toString();
-            obj.SetNameOfTask(data[j].toString());
-            obj.SetStartDate(data[j].toString());
-            obj.SetFinishDate(data[j].toString());
-            obj.SetStartTime(data[j].toString());
-            obj.SetFinishTime(data[j].toString());
-            obj.SetDescriptionOfTask(data[j].toString());
-            obj.SetColor(data[j].toString());
+            qDebug() << data[j].toString();     //ТУТ ПРОГА КРАШЕТСЯ
+            objJSON->SetNameOfTask(data[j].toString());
+            objJSON->SetStartDate(data[j].toString());
+            objJSON->SetFinishDate(data[j].toString());
+            objJSON->SetStartTime(data[j].toString());
+            objJSON->SetFinishTime(data[j].toString());
+            objJSON->SetDescriptionOfTask(data[j].toString());
+            objJSON->SetColor(data[j].toString());
 
-            eventsByPointer.push_back(&obj);
+            eventsByPointer.push_back(objJSON);
+            ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
         }
     }
-    file.close();
->>>>>>> ForMerging
+    fileJSON.close();
+
+    FillCalendar();
+    FillTaskTable();*/
 }
 //
 
@@ -522,20 +453,17 @@ void MainWindow::ReadFromFile()
 //Функция записи данных в файл
 void MainWindow::SaveToFile()
 {
-<<<<<<< HEAD
-
-=======
     //ЗАПИСЬ В XML ФАЙЛ
-    /*QFile file("D:/asdddd.xml");
-    file.open(QIODevice::WriteOnly);
+    QFile fileXML("D:/asdddd.xml");
+    fileXML.open(QIODevice::WriteOnly | QIODevice::Truncate);
 
-    QXmlStreamWriter xmlWriter(&file);
+    QXmlStreamWriter xmlWriter(&fileXML);
     xmlWriter.setAutoFormatting(true);
     xmlWriter.writeStartDocument();
     xmlWriter.writeStartElement("resources");
 
     QString ev;
-    for(int i = 0; i < eventsByPointer.size(); i++)
+    for(int i = 0; i < eventsByPointer.count(); i++)
     {
         ev = "Event_";
         ev = ev.append(QString::number(i + 1));
@@ -551,12 +479,11 @@ void MainWindow::SaveToFile()
         xmlWriter.writeEndElement();
     }
     xmlWriter.writeEndDocument();
-    file.close();*/
+    fileXML.close();
 
-
-    //ЗАПИСЬ В JSON
-    QFile file("D:/asdddd.json");
-    if (!file.open(QIODevice::WriteOnly))
+    /*//ЗАПИСЬ В JSON
+    QFile fileJSON("D:/asdddd.json");
+    if (!fileJSON.open(QIODevice::WriteOnly))
     {
         qWarning("Couldn't open save file.");
         return;
@@ -577,9 +504,8 @@ void MainWindow::SaveToFile()
         json["Event_" + QString::number(i+1)] = data;
     }
     QJsonDocument saveDoc(json);
-    file.write(saveDoc.toJson());
-    file.close();
->>>>>>> ForMerging
+    fileJSON.write(saveDoc.toJson());
+    fileJSON.close();*/
 }
 //
 
@@ -697,7 +623,3 @@ void MainWindow::on_pushButtonDeleteTask_clicked()
     DeleteTask(nameTask, colorTask);
 }
 //
-<<<<<<< HEAD
-=======
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging

@@ -1,29 +1,4 @@
 #include "event.h"
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-Event::Event(QString name_of_event, date ds, date de)
-{
-    name = name_of_event;
-    date_of_start.day = ds.day;
-    date_of_start.month = ds.month;
-    date_of_start.year = ds.year;
-    date_of_end.day = de.day;
-    date_of_end.month = de.month;
-    date_of_end.year = de.year;
-}
-Event::Event(QString name_of_event, date ds, date de, QString com)
-{
-    name = name_of_event;
-    date_of_start.day = ds.day;
-    date_of_start.month = ds.month;
-    date_of_start.year = ds.year;
-    date_of_end.day = de.day;
-    date_of_end.month = de.month;
-    date_of_end.year = de.year;
-    comment = com;
-=======
->>>>>>> ForMerging
 QString GetNameOfTask();
 QDate GetStartDate();
 QDate GetFinishDate();
@@ -66,14 +41,11 @@ void Event::SetColor (QColor clr)
 }
 //
 
-<<<<<<< HEAD
-=======
 void Event::SetColor (QString scolor)
 {
     color = scolor;
 }
 
->>>>>>> ForMerging
 
 
 //Возврат названия задачи
@@ -134,8 +106,6 @@ QString Event::GetDescriptionOfTask()
 QColor Event::GetColor()
 {
     return color;
-<<<<<<< HEAD
-=======
 }
 //
 
@@ -167,7 +137,4 @@ void Event::SetFinishTime(QString time)
 void Event::SetDescriptionOfTask(QString dscr)
 {
     descriptionOfTask = dscr;
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
 }
-//

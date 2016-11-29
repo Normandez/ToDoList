@@ -1,22 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-<<<<<<< HEAD
 #include "event.h"
 #include <QMainWindow>
 #include <QDate>
 #include <QVector>
-=======
-<<<<<<< HEAD
-#include <QMainWindow>
-#include <QDate>
-=======
-#include "event.h"
-#include <QMainWindow>
-#include <QDate>
-#include <QVector>
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
 
 
 
@@ -31,23 +19,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-<<<<<<< HEAD
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void AddTask();
-=======
-<<<<<<< HEAD
-    QString nameOfTask;
-    QString descriptionOfTask;
-    QDate startDate;
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    void AddTask();
-=======
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
-    void AddTask();
->>>>>>> ForMerging
     void CustomTask(QString nameTask, QColor colorTask);
     void FillCalendar();
     void FillListUnderCalendar(Event *task, QColor color);
@@ -55,10 +29,6 @@ public:
     void ReadFromFile ();
     void SaveToFile ();
     void DeleteTask (QString nameTask, QColor colorTask);
-<<<<<<< HEAD
-=======
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
 
 private slots:
     void on_pushButtonAddTask_Main_clicked();
@@ -71,7 +41,6 @@ private slots:
 
     void on_pushButtonAddTask_OnTable_clicked();
 
-<<<<<<< HEAD
     void on_calendarWidget_activated();
 
     void on_pushButtonCustomTask_clicked();
@@ -93,36 +62,6 @@ private:
 
     bool doubleClickChk = false;
     QVector <Event*> eventsByPointer;
-=======
-<<<<<<< HEAD
-    void on_calendarWidget_activated(const QDate &date);
-
-private:
-    Ui::MainWindow *ui;
-=======
-    void on_calendarWidget_activated();
-
-    void on_pushButtonCustomTask_clicked();
-
-    void on_calendarWidget_clicked(const QDate &date);
-
-    void on_calendarWidget_selectionChanged();
-
-    void on_actionOpen_triggered();
-
-    void on_actionSave_triggered();
-
-    void on_actionSaveAs_triggered();
-
-    void on_pushButtonDeleteTask_clicked();
-
-private:
-    Ui::MainWindow *ui;
-
-    bool doubleClickChk = false;
-    QVector <Event*> eventsByPointer;
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
 };
 
 #endif // MAINWINDOW_H

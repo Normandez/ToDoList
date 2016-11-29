@@ -37,15 +37,7 @@ background-color: rgb(247, 247, 247);
      <rect>
       <x>95</x>
       <y>4</y>
-<<<<<<< HEAD
       <width>131</width>
-=======
-<<<<<<< HEAD
-      <width>121</width>
-=======
-      <width>131</width>
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
       <height>23</height>
      </rect>
     </property>
@@ -289,11 +281,6 @@ color: rgb(140, 140, 140);
      </widget>
     </widget>
    </widget>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> ForMerging
    <widget class="QPushButton" name="pushButtonCustomTask">
     <property name="geometry">
      <rect>
@@ -320,10 +307,6 @@ color: rgb(140, 140, 140);
      <string>Удалить задачу</string>
     </property>
    </widget>
-<<<<<<< HEAD
-=======
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -334,11 +317,6 @@ color: rgb(140, 140, 140);
      <height>21</height>
     </rect>
    </property>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> ForMerging
    <widget class="QMenu" name="menu">
     <property name="title">
      <string>Файл</string>
@@ -349,10 +327,6 @@ color: rgb(140, 140, 140);
     <addaction name="actionSaveAs"/>
    </widget>
    <addaction name="menu"/>
-<<<<<<< HEAD
-=======
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -362,11 +336,6 @@ color: rgb(140, 140, 140);
     <bool>false</bool>
    </attribute>
   </widget>
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> ForMerging
   <action name="actionOpen">
    <property name="checkable">
     <bool>false</bool>
@@ -391,10 +360,6 @@ color: rgb(140, 140, 140);
     <string>Сохранить как...</string>
    </property>
   </action>
-<<<<<<< HEAD
-=======
->>>>>>> b126979570160e1560f69ca775275d0c5a803563
->>>>>>> ForMerging
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
