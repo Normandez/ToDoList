@@ -372,7 +372,7 @@ void MainWindow::ReadFromFile()
     //XML Чтение
     Event *objXML;
 
-    QFile fileXML("D:/asdddd.xml");
+    QFile fileXML("asdddd.xml");
     if(!fileXML.open(QFile::ReadOnly | QFile::Text))
         QMessageBox::warning(this,
                               "Ошибка файла",
@@ -439,7 +439,7 @@ void MainWindow::ReadFromFile()
 
     //JSON Чтение
     /*Event *objJSON;
-    QFile fileJSON("D:/asdddd.json");
+    QFile fileJSON("asdddd.json");
     if (!fileJSON.open(QIODevice::ReadOnly))
     {
         qWarning("Couldn't open save file.");
@@ -480,7 +480,7 @@ void MainWindow::ReadFromFile()
 void MainWindow::SaveToFile()
 {
     //ЗАПИСЬ В XML ФАЙЛ
-    QFile fileXML("D:/asdddd.xml");
+    QFile fileXML("asdddd.xml");
     fileXML.open(QIODevice::WriteOnly | QIODevice::Truncate);
 
     QXmlStreamWriter xmlWriter(&fileXML);
@@ -507,7 +507,7 @@ void MainWindow::SaveToFile()
     fileXML.close();
 
     //ЗАПИСЬ В JSON
-    /*QFile fileJSON("D:/asdddd.json");
+    /*QFile fileJSON("asdddd.json");
     if (!fileJSON.open(QIODevice::WriteOnly))
     {
         qWarning("Couldn't open save file.");
