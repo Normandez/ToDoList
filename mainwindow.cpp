@@ -371,6 +371,7 @@ void MainWindow::ReadFromFile()
 {
     //XML Чтение
     Event *objXML;
+
     QFile fileXML("D:/asdddd.xml");
     if(!fileXML.open(QFile::ReadOnly | QFile::Text))
         QMessageBox::warning(this,
@@ -383,25 +384,30 @@ void MainWindow::ReadFromFile()
         xmlReader.setDevice(&fileXML);
         xmlReader.readNext();
 
-        //<БАГ>ЗДЕСЬ ЦИКЛ РАБОТАЕТ НЕВЕРНО! НЕЗАВИСИМО ОТ КОЛИЧЕСТВА СОХРАНЕННЫХ ЭЛЕМЕНТОВ В ВЕКТОРЕ, В ИФ ЗАХОДИТ ВСЕГДА ВСЕГО 1 РАЗ!
         while(!xmlReader.atEnd())
         {
             if(xmlReader.isStartElement())
             {
                 objXML = new Event ();
-                objXML->SetNameOfTask(xmlReader.readElementText());
-                objXML->SetStartDate(xmlReader.readElementText());
-                objXML->SetFinishDate(xmlReader.readElementText());
-                objXML->SetStartTime(xmlReader.readElementText());
-                objXML->SetFinishTime(xmlReader.readElementText());
-                objXML->SetDescriptionOfTask(xmlReader.readElementText());
-
+                if(xmlReader.name() == "NameOfEvent")
+                    objXML->SetNameOfTask(xmlReader.readElementText());
+                else if(xmlReader.name() == "StartDate")
+                    objXML->SetStartDate(xmlReader.readElementText());
+                else if(xmlReader.name() == "FinishDate")
+                    objXML->SetFinishDate(xmlReader.readElementText());
+                else if(xmlReader.name() == "StartTime")
+                    objXML->SetStartTime(xmlReader.readElementText());
+                else if(xmlReader.name() == "FinishDate")
+                    objXML->SetFinishTime(xmlReader.readElementText());
+                else if(xmlReader.name() == "Description")
+                    objXML->SetDescriptionOfTask(xmlReader.readElementText());
+                else if(xmlReader.name() == "Color")
+                    objXML->SetColor(xmlReader.readElementText());
                 eventsByPointer.push_back(objXML);
                 ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
             }
             xmlReader.readNext();
         }
-        //<БАГ>
         fileXML.close();
 
         FillCalendar();
@@ -468,13 +474,12 @@ void MainWindow::SaveToFile()
         ev = "Event_";
         ev = ev.append(QString::number(i + 1));
         xmlWriter.writeStartElement(ev);
-        //xmlWriter.writeAttribute("StartDate", eventsByPointer.at(i)->GetStartDate());
         xmlWriter.writeTextElement("NameOfEvent", eventsByPointer.at(i)->GetNameOfTask());
         xmlWriter.writeTextElement("StartDate", eventsByPointer.at(i)->GetStartDate().toString("yyyy.MM.dd"));
         xmlWriter.writeTextElement("FinishDate",eventsByPointer.at(i)->GetFinishDate().toString("yyyy.MM.dd"));
         xmlWriter.writeTextElement("StartTime", eventsByPointer.at(i)->GetStartTime().toString("hh.mm"));
         xmlWriter.writeTextElement("FinishTime", eventsByPointer.at(i)->GetFinishTime().toString("hh.mm"));
-        xmlWriter.writeTextElement("Desription", eventsByPointer.at(i)->GetDescriptionOfTask());
+        xmlWriter.writeTextElement("Description", eventsByPointer.at(i)->GetDescriptionOfTask());
         xmlWriter.writeTextElement("Color",  eventsByPointer.at(i)->GetColor().name());
         xmlWriter.writeEndElement();
     }
