@@ -116,22 +116,22 @@ void Event::SetNameOfTask(QString name)
 
 void Event::SetStartDate(QString date)
 {
-    startDate = QDate::fromString(date);
+    startDate = QDate::fromString(date, "dd.MM.yyyy");
 }
 
 void Event::SetFinishDate(QString date)
 {
-    finishDate = QDate::fromString(date);
+    finishDate = QDate::fromString(date, "dd.MM.yyyy");
 }
 
 void Event::SetStartTime(QString time)
 {
-    startTime = QTime::fromString(time);
+    startTime = QTime::fromString(time, "hh:mm");
 }
 
 void Event::SetFinishTime(QString time)
 {
-    finishTime = QTime::fromString(time);
+    finishTime = QTime::fromString(time, "hh:mm");
 }
 
 void Event::SetDescriptionOfTask(QString dscr)

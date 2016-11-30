@@ -12,6 +12,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
+#include <QDir>
 
 
 
@@ -217,9 +218,10 @@ void MainWindow::on_pushButtonCustomTask_clicked()
 //Функция заполнения календаря задачами
 void MainWindow::FillCalendar()
 {
+    QTextCharFormat formatCalendar;
+
     for (short i = 0; i < eventsByPointer.count(); i++)
     {
-        QTextCharFormat formatCalendar;
         formatCalendar.setBackground(eventsByPointer[i]->GetColor());
         QDate dateCount = eventsByPointer[i]->GetStartDate();
         int day = dateCount.day();
@@ -369,7 +371,7 @@ void MainWindow::on_calendarWidget_selectionChanged()
 //Функция считывания данных из файла
 void MainWindow::ReadFromFile()
 {
-    //XML Чтение
+    /*//XML Чтение
     Event *objXML;
 
     QFile fileXML("asdddd.xml");
@@ -426,7 +428,6 @@ void MainWindow::ReadFromFile()
                     eventsByPointer.push_back(objXML);
                     ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
                 }
-
             }
 
             xmlReader.readNext();
@@ -435,10 +436,10 @@ void MainWindow::ReadFromFile()
 
         FillCalendar();
         FillTaskTable();
-    }
+    }*/
 
     //JSON Чтение
-    /*Event *objJSON;
+    Event *objJSON;
     QFile fileJSON("asdddd.json");
     if (!fileJSON.open(QIODevice::ReadOnly))
     {
@@ -470,7 +471,7 @@ void MainWindow::ReadFromFile()
     fileJSON.close();
 
     FillCalendar();
-    FillTaskTable();*/
+    FillTaskTable();
 }
 //
 
@@ -479,7 +480,7 @@ void MainWindow::ReadFromFile()
 //Функция записи данных в файл
 void MainWindow::SaveToFile()
 {
-    //ЗАПИСЬ В XML ФАЙЛ
+    /*//ЗАПИСЬ В XML ФАЙЛ
     QFile fileXML("asdddd.xml");
     fileXML.open(QIODevice::WriteOnly | QIODevice::Truncate);
 
@@ -494,43 +495,43 @@ void MainWindow::SaveToFile()
         ev = "Event_";
         ev = ev.append(QString::number(i + 1));
         xmlWriter.writeStartElement(ev);
-        xmlWriter.writeTextElement("NameOfEvent", eventsByPointer.at(i)->GetNameOfTask());
-        xmlWriter.writeTextElement("StartDate", eventsByPointer.at(i)->GetStartDate().toString("yyyy.MM.dd"));
-        xmlWriter.writeTextElement("FinishDate",eventsByPointer.at(i)->GetFinishDate().toString("yyyy.MM.dd"));
-        xmlWriter.writeTextElement("StartTime", eventsByPointer.at(i)->GetStartTime().toString("hh.mm"));
-        xmlWriter.writeTextElement("FinishTime", eventsByPointer.at(i)->GetFinishTime().toString("hh.mm"));
-        xmlWriter.writeTextElement("Description", eventsByPointer.at(i)->GetDescriptionOfTask());
-        xmlWriter.writeTextElement("Color",  eventsByPointer.at(i)->GetColor().name());
+        xmlWriter.writeTextElement("NameOfEvent", eventsByPointer[i]->GetNameOfTask());
+        xmlWriter.writeTextElement("StartDate", eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy"));
+        xmlWriter.writeTextElement("FinishDate",eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
+        xmlWriter.writeTextElement("StartTime", eventsByPointer[i]->GetStartTime().toString("hh:mm"));
+        xmlWriter.writeTextElement("FinishTime", eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
+        xmlWriter.writeTextElement("Description", eventsByPointer[i]->GetDescriptionOfTask());
+        xmlWriter.writeTextElement("Color",  eventsByPointer[i]->GetColor().name());
         xmlWriter.writeEndElement();
     }
     xmlWriter.writeEndDocument();
-    fileXML.close();
+    fileXML.close();*/
 
     //ЗАПИСЬ В JSON
-    /*QFile fileJSON("asdddd.json");
-    if (!fileJSON.open(QIODevice::WriteOnly))
+    QFile fileJSON("asdddd.json");
+    if (!fileJSON.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         qWarning("Couldn't open save file.");
         return;
     }
 
     QJsonObject json;
-    json["CountOfEvents"] = eventsByPointer.size();
-    for(int i = 0; i < eventsByPointer.size(); i++)
+    json["CountOfEvents"] = eventsByPointer.count();
+    for(int i = 0; i < eventsByPointer.count(); i++)
     {
         QJsonArray data;
-        data.append(eventsByPointer.at(i)->GetNameOfTask());
-        data.append(eventsByPointer.at(i)->GetStartDate().toString("yyyy.MM.dd"));
-        data.append(eventsByPointer.at(i)->GetFinishDate().toString("yyyy.MM.dd"));
-        data.append(eventsByPointer.at(i)->GetStartTime().toString("hh.mm"));
-        data.append(eventsByPointer.at(i)->GetFinishTime().toString("hh.mm"));
-        data.append(eventsByPointer.at(i)->GetDescriptionOfTask());
-        data.append(eventsByPointer.at(i)->GetColor().name());
+        data.append(eventsByPointer[i]->GetNameOfTask());
+        data.append(eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy"));
+        data.append(eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
+        data.append(eventsByPointer[i]->GetStartTime().toString("hh:mm"));
+        data.append(eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
+        data.append(eventsByPointer[i]->GetDescriptionOfTask());
+        data.append(eventsByPointer[i]->GetColor().name());
         json["Event_" + QString::number(i+1)] = data;
     }
     QJsonDocument saveDoc(json);
     fileJSON.write(saveDoc.toJson());
-    fileJSON.close();*/
+    fileJSON.close();
 }
 //
 
