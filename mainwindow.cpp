@@ -382,30 +382,53 @@ void MainWindow::ReadFromFile()
     {
         QXmlStreamReader xmlReader;
         xmlReader.setDevice(&fileXML);
-        xmlReader.readNext();
 
         while(!xmlReader.atEnd())
         {
-            if(xmlReader.isStartElement())
+
+            if(xmlReader.isStartElement() && xmlReader.name() != "resources")
             {
                 objXML = new Event ();
                 if(xmlReader.name() == "NameOfEvent")
+                {
                     objXML->SetNameOfTask(xmlReader.readElementText());
-                else if(xmlReader.name() == "StartDate")
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "StartDate")
+                {
                     objXML->SetStartDate(xmlReader.readElementText());
-                else if(xmlReader.name() == "FinishDate")
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "FinishDate")
+                {
                     objXML->SetFinishDate(xmlReader.readElementText());
-                else if(xmlReader.name() == "StartTime")
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "StartTime")
+                {
                     objXML->SetStartTime(xmlReader.readElementText());
-                else if(xmlReader.name() == "FinishDate")
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "FinishTime")
+                {
                     objXML->SetFinishTime(xmlReader.readElementText());
-                else if(xmlReader.name() == "Description")
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "Description")
+                {
                     objXML->SetDescriptionOfTask(xmlReader.readElementText());
-                else if(xmlReader.name() == "Color")
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "Color")
+                {
                     objXML->SetColor(xmlReader.readElementText());
-                eventsByPointer.push_back(objXML);
-                ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
+                    xmlReader.readNextStartElement();
+                    eventsByPointer.push_back(objXML);
+                    ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
+                }
+
             }
+
             xmlReader.readNext();
         }
         fileXML.close();
@@ -414,8 +437,8 @@ void MainWindow::ReadFromFile()
         FillTaskTable();
     }
 
-    /*//JSON Чтение
-    Event *objJSON;
+    //JSON Чтение
+    /*Event *objJSON;
     QFile fileJSON("D:/asdddd.json");
     if (!fileJSON.open(QIODevice::ReadOnly))
     {
@@ -431,21 +454,18 @@ void MainWindow::ReadFromFile()
     {
         objJSON  = new Event ();
         QJsonArray nEvent = json["Event_" + QString::number(i+1)].toArray();
-        QJsonArray data = nEvent[i].toArray();
-        for(int j = 0; j < 7; j++)
-        {
-            qDebug() << data[j].toString();     //ТУТ ПРОГА КРАШЕТСЯ
-            objJSON->SetNameOfTask(data[j].toString());
-            objJSON->SetStartDate(data[j].toString());
-            objJSON->SetFinishDate(data[j].toString());
-            objJSON->SetStartTime(data[j].toString());
-            objJSON->SetFinishTime(data[j].toString());
-            objJSON->SetDescriptionOfTask(data[j].toString());
-            objJSON->SetColor(data[j].toString());
 
-            eventsByPointer.push_back(objJSON);
-            ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
-        }
+        objJSON->SetNameOfTask(nEvent[0].toString());
+        objJSON->SetStartDate(nEvent[1].toString());
+        objJSON->SetFinishDate(nEvent[2].toString());
+        objJSON->SetStartTime(nEvent[3].toString());
+        objJSON->SetFinishTime(nEvent[4].toString());
+        objJSON->SetDescriptionOfTask(nEvent[5].toString());
+        objJSON->SetColor(nEvent[6].toString());
+
+        eventsByPointer.push_back(objJSON);
+        ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
+
     }
     fileJSON.close();
 
@@ -486,8 +506,8 @@ void MainWindow::SaveToFile()
     xmlWriter.writeEndDocument();
     fileXML.close();
 
-    /*//ЗАПИСЬ В JSON
-    QFile fileJSON("D:/asdddd.json");
+    //ЗАПИСЬ В JSON
+    /*QFile fileJSON("D:/asdddd.json");
     if (!fileJSON.open(QIODevice::WriteOnly))
     {
         qWarning("Couldn't open save file.");
