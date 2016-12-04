@@ -574,6 +574,9 @@ border:1px solid;
    </widget>
   </widget>
   <widget class="QPushButton" name="pushButtonOK">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>1</x>

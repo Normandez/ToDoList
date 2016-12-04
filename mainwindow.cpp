@@ -28,6 +28,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tableWidgetMainTable->setHorizontalHeaderLabels(nameTableHeaders);
     ui->tableWidgetMainTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     //
+
+    //Инициализация таймера контроля напоминания
+    mainTimer = new QTimer ();
+    connect(mainTimer, SIGNAL(timeout()), this, SLOT(mainTimer_overflow()));
+    mainTimer->start(5000);
+    //
 }
 //
 
@@ -48,12 +54,23 @@ MainWindow::~MainWindow()
 //Функция открытия окна добавления новой задачи
 void MainWindow::AddTask ()
 {
+    bool *chkCancel = new bool;
     Event *task = new Event();      //Создаем объект класса задачи
 
-    AddNewTask *AddTaskWindow = new AddNewTask(this, ui->calendarWidget->selectedDate(), task);
+    AddNewTask *AddTaskWindow = new AddNewTask(this, ui->calendarWidget->selectedDate(), task, chkCancel);
     AddTaskWindow->exec();
 
+    //Проверка нажатия отмены на окне создания новой задачи
+    if (*chkCancel)
+    {
+        task->destroyed();
+        return;
+    }
+    //
+
     task->SetColor(QColor(rand()%255+1, rand()%255+1, rand()%255+1));       //Случайный выбор цвета
+
+    task->SetRemind();
 
     eventsByPointer.push_back(task);
 
@@ -137,6 +154,7 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
     {
         if (eventsByPointer[i]->GetNameOfTask() == nameTask && eventsByPointer[i]->GetColor() == colorTask)
         {
+            bool *chkCancel = new bool;
             Event *task = new Event ();
             task = eventsByPointer[i];
 
@@ -157,12 +175,24 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
             }
             //
 
-            AddNewTask *customTaskWnd = new AddNewTask (this, task);
+            AddNewTask *customTaskWnd = new AddNewTask (this, task, chkCancel);
             customTaskWnd->exec();
+
+            FillCalendar();
+
+            //Проверка нажатия отмены на окне редактирования задачи
+            if (*chkCancel)
+            {
+                task->destroyed();
+                delete chkCancel;
+                continue;
+            }
+            //
+
+            task->SetRemind();
 
             eventsByPointer[i] = task;      //Измененный объект
 
-            FillCalendar();
             if(ui->tabWidgetMain->currentIndex() == 0) FillListUnderCalendar(task, task->GetColor());       //Только если открыт календарь (!!! НЕ РАБОТАЕТ, ДАЖЕ ЕСЛИ ТРУ, ХЗ ЧЕГО. ДЕБАЖИЛ, ТАМ ТОЧНО ТРУ!!!)
             FillTaskTable();
         }
@@ -222,19 +252,132 @@ void MainWindow::FillCalendar()
 
     for (short i = 0; i < eventsByPointer.count(); i++)
     {
-        formatCalendar.setBackground(eventsByPointer[i]->GetColor());
-        QDate dateCount = eventsByPointer[i]->GetStartDate();
-        int day = dateCount.day();
-        int month = dateCount.month();
-        int year = dateCount.year();
-        while (dateCount <= eventsByPointer[i]->GetFinishDate())
+        //Если событие однократное
+        if (eventsByPointer[i]->GetRepeatOfTask() == 0)
         {
-            ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
-            day++;
-            if (day > dateCount.daysInMonth()) {month++; day = 1;}
-            if (month > 12) {year++; month = 1;}
-            dateCount.setDate(year, month, day);
+            formatCalendar.setBackground(eventsByPointer[i]->GetColor());
+            QDate dateCount = eventsByPointer[i]->GetStartDate();
+            int day = dateCount.day();
+            int month = dateCount.month();
+            int year = dateCount.year();
+            while (dateCount <= eventsByPointer[i]->GetFinishDate())
+            {
+                ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+                day++;
+                if (day > dateCount.daysInMonth()) {month++; day = 1;}
+                if (month > 12) {year++; month = 1;}
+                dateCount.setDate(year, month, day);
+            }
         }
+
+        //Если событие ежедневное
+        if (eventsByPointer[i]->GetRepeatOfTask() == 1)
+        {
+            formatCalendar.setBackground(eventsByPointer[i]->GetColor());
+            QDate dateCount = eventsByPointer[i]->GetStartDate();
+            int day = dateCount.day();
+            int month = dateCount.month();
+            int year = dateCount.year();
+            while (dateCount.year() <= 2026)
+            {
+                ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+                day++;
+                if (day > dateCount.daysInMonth()) {month++; day = 1;}
+                if (month > 12) {year++; month = 1;}
+                dateCount.setDate(year, month, day);
+            }
+        }
+        //
+
+        //Если событие происходит по будням
+        if (eventsByPointer[i]->GetRepeatOfTask() == 2)
+        {
+            formatCalendar.setBackground(eventsByPointer[i]->GetColor());
+            QDate dateCount = eventsByPointer[i]->GetStartDate();
+            int day = dateCount.day();
+            int month = dateCount.month();
+            int year = dateCount.year();
+            while (dateCount.year() <= 2026)
+            {
+                if (dateCount.dayOfWeek() != 6 && dateCount.dayOfWeek() != 7)ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+                day++;
+                if (day > dateCount.daysInMonth()) {month++; day = 1;}
+                if (month > 12) {year++; month = 1;}
+                dateCount.setDate(year, month, day);
+            }
+        }
+        //
+
+        //Если событие происходит еженедельно
+        if (eventsByPointer[i]->GetRepeatOfTask() == 3)
+        {
+            formatCalendar.setBackground(eventsByPointer[i]->GetColor());
+            QDate dateCount = eventsByPointer[i]->GetStartDate();
+            int day = dateCount.day();
+            int month = dateCount.month();
+            int year = dateCount.year();
+            int dayOfWeek = dateCount.dayOfWeek();
+            while (dateCount.year() <= 2026)
+            {
+                if (dateCount.dayOfWeek() == dayOfWeek)ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+                day++;
+                if (day > dateCount.daysInMonth()) {month++; day = 1;}
+                if (month > 12) {year++; month = 1;}
+                dateCount.setDate(year, month, day);
+            }
+        }
+        //
+
+        //Если событие происходит ежемесечно
+        if (eventsByPointer[i]->GetRepeatOfTask() == 4)
+        {
+            formatCalendar.setBackground(eventsByPointer[i]->GetColor());
+            QDate dateCount = eventsByPointer[i]->GetStartDate();
+            int day = dateCount.day();
+            int month = dateCount.month();
+            int year = dateCount.year();
+            int dayOfMonth = dateCount.day();
+            while (dateCount.year() <= 2026)
+            {
+                if (dateCount.daysInMonth() < dayOfMonth)
+                {
+                    dateCount.setDate(year, month, dateCount.daysInMonth());
+                    ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+                }
+                if (dateCount.day() == dayOfMonth) ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+                day++;
+                if (day > dateCount.daysInMonth()) {month++; day = 1;}
+                if (month > 12) {year++; month = 1;}
+                dateCount.setDate(year, month, day);
+            }
+        }
+        //
+
+        //Если событие происходит ежегодно
+        if (eventsByPointer[i]->GetRepeatOfTask() == 5)
+        {
+            formatCalendar.setBackground(eventsByPointer[i]->GetColor());
+            QDate dateCount = eventsByPointer[i]->GetStartDate();
+            int day = dateCount.day();
+            int month = dateCount.month();
+            int year = dateCount.year();
+            int dayOfMonth = dateCount.day();
+            int monthOfYear = dateCount.month();
+            while (dateCount.year() <= 2026)
+            {
+                if (dateCount.month() == monthOfYear && dateCount.daysInMonth() < dayOfMonth)
+                {
+                    dateCount.setDate(year, month, dateCount.daysInMonth());
+                    ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+                }
+                if (dateCount.month() == monthOfYear && dateCount.day() == dayOfMonth) ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+                day++;
+                if (day > dateCount.daysInMonth()) {month++; day = 1;}
+                if (month > 12) {year++; month = 1;}
+                dateCount.setDate(year, month, day);
+            }
+        }
+        //
     }
 }
 //
@@ -280,13 +423,19 @@ void MainWindow::FillTaskTable()
     QTableWidgetItem *tableItemName;
     QTableWidgetItem *tableItemStartDate;
     QTableWidgetItem *tableItemFinishDate;
+    QTableWidgetItem *tableItemRepeat;
+    QTableWidgetItem *tableItemRemind;
     QTableWidgetItem *tableItemDescription;
+    QString repeat;
+    QString remind;
 
     for (int i = 0; i < eventsByPointer.count(); i++)
     {
         tableItemName = new QTableWidgetItem ();
         tableItemStartDate = new QTableWidgetItem ();
         tableItemFinishDate = new QTableWidgetItem ();
+        tableItemRepeat = new QTableWidgetItem ();
+        tableItemRemind = new QTableWidgetItem ();
         tableItemDescription = new QTableWidgetItem ();
 
         //Заполнение айтемов
@@ -294,6 +443,36 @@ void MainWindow::FillTaskTable()
         tableItemName->setTextColor(eventsByPointer[i]->GetColor());
         tableItemStartDate->setText(eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy") + " в " + eventsByPointer[i]->GetStartTime().toString("hh:mm"));
         tableItemFinishDate->setText(eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy") + " в " + eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
+        //Расшифровка кратности
+        repeat = QString::number(eventsByPointer[i]->GetRepeatOfTask());
+        repeat.replace("0","Однократно");
+        repeat.replace("1","Ежедневно");
+        repeat.replace("2","По будням");
+        repeat.replace("3","Еженедельно");
+        repeat.replace("4","Ежемесячно");
+        repeat.replace("5","Ежегодно");
+        //
+        tableItemRepeat->setText(repeat);
+        //Расшифровка напоминания
+        remind = QString::number(eventsByPointer[i]->GetRemindOfTask());
+        remind.replace("0","Нет");
+        remind.replace("1","За 1 минуту");
+        remind.replace("2","За 5 минут");
+        remind.replace("3","За 10 минут");
+        remind.replace("4","За 15 минут");
+        remind.replace("5","За 20 минут");
+        remind.replace("6","За 25 минут");
+        remind.replace("7","За 30 минут");
+        remind.replace("8","За 45 минут");
+        remind.replace("9","За 1 час");
+        remind.replace("10","За 2 часа");
+        remind.replace("11","За 3 часа");
+        remind.replace("12","За 12 часов");
+        remind.replace("13","За 1 день");
+        remind.replace("14","За 2 дня");
+        remind.replace("15","За 1 неделю");
+        tableItemRemind->setText(remind);
+        //
         tableItemDescription->setText(eventsByPointer[i]->GetDescriptionOfTask());
         //
 
@@ -301,6 +480,8 @@ void MainWindow::FillTaskTable()
         ui->tableWidgetMainTable->setItem(i, 0, tableItemName);
         ui->tableWidgetMainTable->setItem(i, 1, tableItemStartDate);
         ui->tableWidgetMainTable->setItem(i, 2, tableItemFinishDate);
+        ui->tableWidgetMainTable->setItem(i, 3, tableItemRepeat);
+        ui->tableWidgetMainTable->setItem(i, 4, tableItemRemind);
         ui->tableWidgetMainTable->setItem(i, 5, tableItemDescription);
         //
     }
@@ -588,6 +769,7 @@ void MainWindow::DeleteTask(QString nameTask, QColor colorTask)
             }
             //
 
+            eventsByPointer[i]->destroyed();        //Удаление самого указателя (объекта)
             eventsByPointer.remove(i);      //Удаление конкретного элемента из вектора
 
             //Обработка видимости кнопок добавления задачи на полях отображения информации
@@ -647,5 +829,22 @@ void MainWindow::on_pushButtonDeleteTask_clicked()
             else return;
 
     DeleteTask(nameTask, colorTask);
+}
+//
+
+
+
+//Обработка напоминания таймером
+void MainWindow::mainTimer_overflow()
+{
+    for (int i = 0; i < eventsByPointer.count(); i++)
+    {
+        if (eventsByPointer[i]->GetRemindOfTask() != 0 && eventsByPointer[i]->GetRemindDate() == QDate::currentDate() && eventsByPointer[i]->GetRemindTime().toString("hh:mm") == QTime::currentTime().toString("hh:mm"))
+        {
+            QMessageBox *msgRemind = new QMessageBox (this);        //Тут будет вообще новая форма, а не этот МессджБокс. Это пока что так, абы проверить, что робит
+            msgRemind->setText("123");
+            msgRemind->show();
+        }
+    }
 }
 //

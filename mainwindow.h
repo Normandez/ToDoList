@@ -5,6 +5,8 @@
 #include <QMainWindow>
 #include <QDate>
 #include <QVector>
+#include <QTime>
+#include <QTimer>
 
 
 
@@ -29,6 +31,8 @@ public:
     void ReadFromFile ();
     void SaveToFile ();
     void DeleteTask (QString nameTask, QColor colorTask);
+
+    QTimer *mainTimer;
 
 private slots:
     void on_pushButtonAddTask_Main_clicked();
@@ -56,6 +60,9 @@ private slots:
     void on_actionSaveAs_triggered();
 
     void on_pushButtonDeleteTask_clicked();
+
+public slots:
+    void mainTimer_overflow();
 
 private:
     Ui::MainWindow *ui;

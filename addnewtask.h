@@ -17,8 +17,8 @@ class AddNewTask : public QDialog
     Q_OBJECT
 
 public:
-    explicit AddNewTask(QWidget *parent, QDate startDate, Event *objTask);
-    explicit AddNewTask(QWidget *parent, Event *objTask);
+    explicit AddNewTask(QWidget *parent, QDate startDate, Event *objTask, bool *cancel);
+    explicit AddNewTask(QWidget *parent, Event *objTask, bool *cancel);
     ~AddNewTask();
 
 private slots:
@@ -32,11 +32,16 @@ private slots:
 
     void on_dateTimeEditFinishTime_timeChanged(const QTime &time);
 
+    void on_dateEditStartDate_dateChanged(const QDate &date);
+
+    void on_lineEditName_textChanged(const QString &arg1);
+
 private:
     Ui::AddNewTask *ui;
 
     Event *obj;
     QDate sDate;
+    bool *chkCancel;
 };
 
 #endif // ADDNEWTASK_H
