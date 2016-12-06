@@ -19,6 +19,7 @@ private:
     QTime finishTime;
     short repeatOfTask;
     short remindOfTask;
+    short remindComplete = 0;
     QDate remindDate;
     QTime remindTime;
     QString descriptionOfTask;      //описание задачи
@@ -37,6 +38,7 @@ public:
     QTime GetFinishTime();
     short GetRepeatOfTask ();
     short GetRemindOfTask ();
+    short GetRemindComplete ();
     QDate GetRemindDate ();
     QTime GetRemindTime ();
     QString GetDescriptionOfTask();
@@ -50,6 +52,7 @@ public:
     void SetFinishTime(QString);
     void SetRepeatOfTask (short repeatCode);
     void SetRemindOfTask (short remindCode);
+    void SetRemindComplete (short code);
     void SetRemind ();
     void SetDescriptionOfTask(QString);
 };

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "event.h"
 #include "addnewtask.h"
+#include "remindwindow.h"
 #include <QMessageBox>
 #include <QTextCharFormat>
 #include <QFile>
@@ -177,6 +178,8 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
 
             AddNewTask *customTaskWnd = new AddNewTask (this, task, chkCancel);
             customTaskWnd->exec();
+
+            task->SetRemindComplete(0);     //Сброс совершённости напоминания
 
             FillCalendar();
 
@@ -839,11 +842,18 @@ void MainWindow::mainTimer_overflow()
 {
     for (int i = 0; i < eventsByPointer.count(); i++)
     {
-        if (eventsByPointer[i]->GetRemindOfTask() != 0 && eventsByPointer[i]->GetRemindDate() == QDate::currentDate() && eventsByPointer[i]->GetRemindTime().toString("hh:mm") == QTime::currentTime().toString("hh:mm"))
+        if (eventsByPointer[i]->GetRemindOfTask() != 0 &&  eventsByPointer[i]->GetRemindComplete() == 0 && eventsByPointer[i]->GetRemindDate() == QDate::currentDate() && eventsByPointer[i]->GetRemindTime().toString("hh:mm") == QTime::currentTime().toString("hh:mm"))
         {
-            QMessageBox *msgRemind = new QMessageBox (this);        //Тут будет вообще новая форма, а не этот МессджБокс. Это пока что так, абы проверить, что робит
-            msgRemind->setText("123");
-            msgRemind->show();
+            //Основные данные напоминания
+            QString name = eventsByPointer[i]->GetNameOfTask();
+            QColor color = eventsByPointer[i]->GetColor();
+            QString dateAndTime = eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy") + " в " + eventsByPointer[i]->GetStartTime().toString("hh:mm");
+            //
+
+            RemindWindow *remindWnd = new RemindWindow (this, name, dateAndTime, color);
+            remindWnd->show();
+
+            eventsByPointer[i]->SetRemindComplete(1);     //Напоминание совершено
         }
     }
 }

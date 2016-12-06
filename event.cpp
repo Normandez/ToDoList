@@ -131,6 +131,15 @@ QTime Event::GetRemindTime ()
 
 
 
+//Возврат кода совершения напоминания
+short Event::GetRemindComplete ()
+{
+    return remindComplete;
+}
+//
+
+
+
 //Возврат описания задачи
 QString Event::GetDescriptionOfTask()
 {
@@ -180,6 +189,11 @@ void Event::SetRepeatOfTask (short repeatCode)
 void Event::SetRemindOfTask (short remindCode)
 {
     remindOfTask = remindCode;
+}
+
+void Event::SetRemindComplete (short code)
+{
+    remindComplete = code;
 }
 
 void Event::SetDescriptionOfTask(QString dscr)

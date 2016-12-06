@@ -15,11 +15,17 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     addnewtask.cpp \
-    event.cpp
+    event.cpp \
+    remindwindow.cpp
 
 HEADERS  += mainwindow.h \
     addnewtask.h \
-    event.h
+    event.h \
+    remindwindow.h
 
 FORMS    += mainwindow.ui \
-    addnewtask.ui
+    addnewtask.ui \
+    remindwindow.ui
+
+RESOURCES += \
+    icons.qrc
