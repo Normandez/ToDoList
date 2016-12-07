@@ -96,7 +96,7 @@ QTime Event::GetFinishTime()
 
 
 //Возврат кода повторения задачи
-short Event::GetRepeatOfTask ()
+short Event::GetRepeatOfTask()
 {
     return repeatOfTask;
 }
@@ -132,7 +132,7 @@ QTime Event::GetRemindTime ()
 
 
 //Возврат кода совершения напоминания
-short Event::GetRemindComplete ()
+short Event::GetRemindComplete()
 {
     return remindComplete;
 }

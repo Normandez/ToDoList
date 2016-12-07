@@ -37,8 +37,8 @@ public:
     QTime GetStartTime();
     QTime GetFinishTime();
     short GetRepeatOfTask ();
-    short GetRemindOfTask ();
-    short GetRemindComplete ();
+    short GetRemindOfTask();
+    short GetRemindComplete();
     QDate GetRemindDate ();
     QTime GetRemindTime ();
     QString GetDescriptionOfTask();
