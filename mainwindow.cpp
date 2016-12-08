@@ -14,6 +14,7 @@
 #include <QJsonArray>
 #include <QDebug>
 #include <QDir>
+#include <QFileDialog>
 
 
 
@@ -35,6 +36,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(mainTimer, SIGNAL(timeout()), this, SLOT(mainTimer_overflow()));
     mainTimer->start(5000);
     //
+
+    //Инициализация ТулБара
+    ui->mainToolBar->addWidget(ui->pushButtonToday);
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addWidget(ui->pushButtonAddTask_Main);
+    ui->mainToolBar->addWidget(ui->pushButtonCustomTask);
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addWidget(ui->pushButtonDeleteTask);
+    //
 }
 //
 
@@ -48,7 +58,6 @@ MainWindow::~MainWindow()
 
 
 //ВНИМАНИЕ!!! Комментированные куски кода не трогать!
-
 
 
 
@@ -553,200 +562,227 @@ void MainWindow::on_calendarWidget_selectionChanged()
 
 
 //Функция считывания данных из файла
-void MainWindow::ReadFromFile()
+void MainWindow::ReadFromFile(QString openFileName)
 {
+    if (openFileName.length() != 0) DeleteAllTasks();       //Предварительная очистка интерфейса
+
     //XML Чтение
-    Event *objXML;
-
-    QFile fileXML("asdddd.xml");
-    if(!fileXML.open(QFile::ReadOnly | QFile::Text))
-        QMessageBox::warning(this,
-                              "Ошибка файла",
-                              "Не удалось открыть файл",
-                              QMessageBox::Ok);
-    else
+    if(openFileName.indexOf(".xml") > 0)
     {
-        QXmlStreamReader xmlReader;
-        xmlReader.setDevice(&fileXML);
+        Event *objXML;
 
-        while(!xmlReader.atEnd())
+        QFile fileXML(openFileName);
+        if(!fileXML.open(QFile::ReadOnly | QFile::Text))
+            QMessageBox::warning(this,
+                                  "Ошибка файла",
+                                  "Не удалось открыть файл",
+                                  QMessageBox::Ok);
+        else
         {
+            QXmlStreamReader xmlReader;
+            xmlReader.setDevice(&fileXML);
 
-            if(xmlReader.isStartElement() && xmlReader.name() != "resources")
+            while(!xmlReader.atEnd())
             {
-                objXML = new Event ();
-                if(xmlReader.name() == "NameOfEvent")
+
+                if(xmlReader.isStartElement() && xmlReader.name() != "resources")
                 {
-                    objXML->SetNameOfTask(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "StartDate")
-                {
-                    objXML->SetStartDate(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "FinishDate")
-                {
-                    objXML->SetFinishDate(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "StartTime")
-                {
-                    objXML->SetStartTime(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "FinishTime")
-                {
-                    objXML->SetFinishTime(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
+                    objXML = new Event ();
+                    if(xmlReader.name() == "NameOfEvent")
+                    {
+                        objXML->SetNameOfTask(xmlReader.readElementText());
+                        xmlReader.readNextStartElement();
+                    }
+                    if(xmlReader.name() == "StartDate")
+                    {
+                        objXML->SetStartDate(xmlReader.readElementText());
+                        xmlReader.readNextStartElement();
+                    }
+                    if(xmlReader.name() == "FinishDate")
+                    {
+                        objXML->SetFinishDate(xmlReader.readElementText());
+                        xmlReader.readNextStartElement();
+                    }
+                    if(xmlReader.name() == "StartTime")
+                    {
+                        objXML->SetStartTime(xmlReader.readElementText());
+                        xmlReader.readNextStartElement();
+                    }
+                    if(xmlReader.name() == "FinishTime")
+                    {
+                        objXML->SetFinishTime(xmlReader.readElementText());
+                        xmlReader.readNextStartElement();
+                    }
+
+                    if(xmlReader.name() == "RepeatOfTask")
+                    {
+                        objXML->SetRepeatOfTask(xmlReader.readElementText().toInt());
+                        xmlReader.readNextStartElement();
+                    }
+
+                    if(xmlReader.name() == "RemindOfTask")
+                    {
+                        objXML->SetRemindOfTask(xmlReader.readElementText().toInt());
+                        xmlReader.readNextStartElement();
+                    }
+
+                    if(xmlReader.name() == "RemindComplete")
+                    {
+                        objXML->SetRemindComplete(xmlReader.readElementText().toInt());
+                        xmlReader.readNextStartElement();
+                    }
+
+
+                    if(xmlReader.name() == "Description")
+                    {
+                        objXML->SetDescriptionOfTask(xmlReader.readElementText());
+                        xmlReader.readNextStartElement();
+                    }
+                    if(xmlReader.name() == "Color")
+                    {
+                        objXML->SetColor(xmlReader.readElementText());
+                        objXML->SetRemindComplete(0);
+                        xmlReader.readNextStartElement();
+                        eventsByPointer.push_back(objXML);
+                        ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
+                    }
                 }
 
-                if(xmlReader.name() == "RepeatOfTask")
-                {
-                    objXML->SetRepeatOfTask(xmlReader.readElementText().toInt());
-                    xmlReader.readNextStartElement();
-                }
-
-                if(xmlReader.name() == "RemindOfTask")
-                {
-                    objXML->SetRemindOfTask(xmlReader.readElementText().toInt());
-                    xmlReader.readNextStartElement();
-                }
-
-                if(xmlReader.name() == "RemindComplete")
-                {
-                    objXML->SetRemindComplete(xmlReader.readElementText().toInt());
-                    xmlReader.readNextStartElement();
-                }
-
-
-                if(xmlReader.name() == "Description")
-                {
-                    objXML->SetDescriptionOfTask(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "Color")
-                {
-                    objXML->SetColor(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                    eventsByPointer.push_back(objXML);
-                    ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
-                }
+                xmlReader.readNext();
             }
+            fileXML.close();
 
-            xmlReader.readNext();
+            FillCalendar();
+            FillTaskTable();
         }
-        fileXML.close();
+        return;
+    }
+    //
+
+    //JSON Чтение
+    if(openFileName.indexOf(".json") > 0)
+    {
+        Event *objJSON;
+        QFile fileJSON(openFileName);
+        if (!fileJSON.open(QIODevice::ReadOnly))
+        {
+            qWarning("Couldn't open save file.");
+            return;
+        }
+
+        QByteArray saveData = fileJSON.readAll();
+        QJsonDocument loadDoc = QJsonDocument::fromJson(saveData);
+        QJsonObject json = loadDoc.object();
+
+        for(int i = 0; i < json["CountOfEvents"].toInt(); i++)
+        {
+            objJSON  = new Event ();
+            QJsonArray nEvent = json["Event_" + QString::number(i+1)].toArray();
+
+            objJSON->SetNameOfTask(nEvent[0].toString());
+            objJSON->SetStartDate(nEvent[1].toString());
+            objJSON->SetFinishDate(nEvent[2].toString());
+            objJSON->SetStartTime(nEvent[3].toString());
+            objJSON->SetFinishTime(nEvent[4].toString());
+
+            objJSON->SetRepeatOfTask(nEvent[5].toInt());
+            objJSON->SetRemindOfTask(nEvent[6].toInt());
+            objJSON->SetRemindComplete(nEvent[7].toInt());
+
+            objJSON->SetDescriptionOfTask(nEvent[8].toString());
+            objJSON->SetColor(nEvent[9].toString());
+
+            objJSON->SetRemindComplete(0);
+            eventsByPointer.push_back(objJSON);
+            ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
+
+        }
+        fileJSON.close();
 
         FillCalendar();
         FillTaskTable();
-    }
 
-    //JSON Чтение
-    /*Event *objJSON;
-    QFile fileJSON("asdddd.json");
-    if (!fileJSON.open(QIODevice::ReadOnly))
-    {
-        qWarning("Couldn't open save file.");
         return;
     }
-
-    QByteArray saveData = fileJSON.readAll();
-    QJsonDocument loadDoc = QJsonDocument::fromJson(saveData);
-    QJsonObject json = loadDoc.object();
-
-    for(int i = 0; i < json["CountOfEvents"].toInt(); i++)
-    {
-        objJSON  = new Event ();
-        QJsonArray nEvent = json["Event_" + QString::number(i+1)].toArray();
-
-        objJSON->SetNameOfTask(nEvent[0].toString());
-        objJSON->SetStartDate(nEvent[1].toString());
-        objJSON->SetFinishDate(nEvent[2].toString());
-        objJSON->SetStartTime(nEvent[3].toString());
-        objJSON->SetFinishTime(nEvent[4].toString());
-
-        objJSON->SetRepeatOfTask(nEvent[5].toInt());
-        objJSON->SetRemindOfTask(nEvent[6].toInt());
-        objJSON->SetRemindComplete(nEvent[7].toInt());
-
-        objJSON->SetDescriptionOfTask(nEvent[8].toString());
-        objJSON->SetColor(nEvent[9].toString());
-
-        eventsByPointer.push_back(objJSON);
-        ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
-
-    }
-    fileJSON.close();
-
-    FillCalendar();
-    FillTaskTable();*/
+    //
 }
 //
 
 
 
 //Функция записи данных в файл
-void MainWindow::SaveToFile()
+void MainWindow::SaveToFile(QString saveFileName)
 {
     //ЗАПИСЬ В XML ФАЙЛ
-    QFile fileXML("asdddd.xml");
-    fileXML.open(QIODevice::WriteOnly | QIODevice::Truncate);
-
-    QXmlStreamWriter xmlWriter(&fileXML);
-    xmlWriter.setAutoFormatting(true);
-    xmlWriter.writeStartDocument();
-    xmlWriter.writeStartElement("resources");
-
-    QString ev;
-    for(int i = 0; i < eventsByPointer.count(); i++)
+    if (saveFileName.indexOf(".xml") > 0)
     {
-        ev = "Event_";
-        ev = ev.append(QString::number(i + 1));
-        xmlWriter.writeStartElement(ev);
-        xmlWriter.writeTextElement("NameOfEvent", eventsByPointer[i]->GetNameOfTask());
-        xmlWriter.writeTextElement("StartDate", eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy"));
-        xmlWriter.writeTextElement("FinishDate",eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
-        xmlWriter.writeTextElement("StartTime", eventsByPointer[i]->GetStartTime().toString("hh:mm"));
-        xmlWriter.writeTextElement("FinishTime", eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
-        xmlWriter.writeTextElement("RepeatOfTask", QString::number(eventsByPointer[i]->GetRepeatOfTask()));
-        xmlWriter.writeTextElement("RemindOfTask", QString::number(eventsByPointer[i]->GetRemindOfTask()));
-        xmlWriter.writeTextElement("RemindComplete", QString::number(eventsByPointer[i]->GetRemindComplete()));
-        xmlWriter.writeTextElement("Description", eventsByPointer[i]->GetDescriptionOfTask());
-        xmlWriter.writeTextElement("Color",  eventsByPointer[i]->GetColor().name());
-        xmlWriter.writeEndElement();
-    }
-    xmlWriter.writeEndDocument();
-    fileXML.close();
+        QFile fileXML(saveFileName);
+        fileXML.open(QIODevice::WriteOnly | QIODevice::Truncate);
 
-    //ЗАПИСЬ В JSON
-    /*QFile fileJSON("asdddd.json");
-    if (!fileJSON.open(QIODevice::WriteOnly | QIODevice::Truncate))
-    {
-        qWarning("Couldn't open save file.");
+        QXmlStreamWriter xmlWriter(&fileXML);
+        xmlWriter.setAutoFormatting(true);
+        xmlWriter.writeStartDocument();
+        xmlWriter.writeStartElement("resources");
+
+        QString ev;
+        for(int i = 0; i < eventsByPointer.count(); i++)
+        {
+            ev = "Event_";
+            ev = ev.append(QString::number(i + 1));
+            xmlWriter.writeStartElement(ev);
+            xmlWriter.writeTextElement("NameOfEvent", eventsByPointer[i]->GetNameOfTask());
+            xmlWriter.writeTextElement("StartDate", eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy"));
+            xmlWriter.writeTextElement("FinishDate",eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
+            xmlWriter.writeTextElement("StartTime", eventsByPointer[i]->GetStartTime().toString("hh:mm"));
+            xmlWriter.writeTextElement("FinishTime", eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
+            xmlWriter.writeTextElement("RepeatOfTask", QString::number(eventsByPointer[i]->GetRepeatOfTask()));
+            xmlWriter.writeTextElement("RemindOfTask", QString::number(eventsByPointer[i]->GetRemindOfTask()));
+            xmlWriter.writeTextElement("RemindComplete", QString::number(eventsByPointer[i]->GetRemindComplete()));
+            xmlWriter.writeTextElement("Description", eventsByPointer[i]->GetDescriptionOfTask());
+            xmlWriter.writeTextElement("Color",  eventsByPointer[i]->GetColor().name());
+            xmlWriter.writeEndElement();
+        }
+        xmlWriter.writeEndDocument();
+        fileXML.close();
+
         return;
     }
+    //
 
-    QJsonObject json;
-    json["CountOfEvents"] = eventsByPointer.count();
-    for(int i = 0; i < eventsByPointer.count(); i++)
+    //ЗАПИСЬ В JSON
+    if (saveFileName.indexOf(".json") > 0)
     {
-        QJsonArray data;
-        data.append(eventsByPointer[i]->GetNameOfTask());
-        data.append(eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy"));
-        data.append(eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
-        data.append(eventsByPointer[i]->GetStartTime().toString("hh:mm"));
-        data.append(eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
-        data.append(eventsByPointer[i]->GetRepeatOfTask());
-        data.append(eventsByPointer[i]->GetRemindOfTask());
-        data.append(eventsByPointer[i]->GetRemindComplete());
-        data.append(eventsByPointer[i]->GetDescriptionOfTask());
-        data.append(eventsByPointer[i]->GetColor().name());
-        json["Event_" + QString::number(i+1)] = data;
+        QFile fileJSON(saveFileName);
+        if (!fileJSON.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        {
+            qWarning("Couldn't open save file.");
+            return;
+        }
+
+        QJsonObject json;
+        json["CountOfEvents"] = eventsByPointer.count();
+        for(int i = 0; i < eventsByPointer.count(); i++)
+        {
+            QJsonArray data;
+            data.append(eventsByPointer[i]->GetNameOfTask());
+            data.append(eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy"));
+            data.append(eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
+            data.append(eventsByPointer[i]->GetStartTime().toString("hh:mm"));
+            data.append(eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
+            data.append(eventsByPointer[i]->GetRepeatOfTask());
+            data.append(eventsByPointer[i]->GetRemindOfTask());
+            data.append(eventsByPointer[i]->GetRemindComplete());
+            data.append(eventsByPointer[i]->GetDescriptionOfTask());
+            data.append(eventsByPointer[i]->GetColor().name());
+            json["Event_" + QString::number(i+1)] = data;
+        }
+        QJsonDocument saveDoc(json);
+        fileJSON.write(saveDoc.toJson());
+        fileJSON.close();
+
+        return;
     }
-    QJsonDocument saveDoc(json);
-    fileJSON.write(saveDoc.toJson());
-    fileJSON.close();*/
+    //
 }
 //
 
@@ -754,8 +790,10 @@ void MainWindow::SaveToFile()
 
 //Меню "Файл->Открыть..."
 void MainWindow::on_actionOpen_triggered()
-{
-    ReadFromFile();
+{   
+    QFileDialog *openFileDialog = new QFileDialog (this);
+    fileName = openFileDialog->getOpenFileName(this, "Открыть...", ".\\", tr("XML (*.xml);;JSON (*.json)" ));
+    ReadFromFile(fileName);
 }
 //
 
@@ -764,7 +802,8 @@ void MainWindow::on_actionOpen_triggered()
 //Меню "Файл->Сохранить"
 void MainWindow::on_actionSave_triggered()
 {
-    SaveToFile();
+    if (fileName.length() == 0) fileName = ".\\Unnamed.xml";        //ЭТО НАДО ВЫРЕЗАТЬ!
+    SaveToFile(fileName);
 }
 //
 
@@ -773,7 +812,9 @@ void MainWindow::on_actionSave_triggered()
 //Меню "Файл->Сохранить как..."
 void MainWindow::on_actionSaveAs_triggered()
 {
-    SaveToFile();
+    QFileDialog *saveFileDialog = new QFileDialog (this);
+    fileName = saveFileDialog->getSaveFileName (this, "Сохранить как...", ".\\", tr("XML (*.xml);;JSON (*.json)" ));
+    SaveToFile(fileName);
 }
 //
 
@@ -887,5 +928,65 @@ void MainWindow::mainTimer_overflow()
             eventsByPointer[i]->SetRemindComplete(1);     //Напоминание совершено
         }
     }
+}
+//
+
+
+
+//Меню Файл->Выход
+void MainWindow::on_actionExit_triggered()
+{
+    close();
+}
+//
+
+
+
+//Функция очистки всего интерфейса
+void MainWindow::DeleteAllTasks ()
+{
+    for (int i = 0; i < eventsByPointer.count(); i++)
+    {
+        //Сброс календаря
+        QTextCharFormat formatCalendar;
+        formatCalendar.setBackground(Qt::white);
+        QDate dateCount = eventsByPointer[i]->GetStartDate();
+        int day = dateCount.day();
+        int month = dateCount.month();
+        int year = dateCount.year();
+        while (dateCount <= eventsByPointer[i]->GetFinishDate())
+        {
+            ui->calendarWidget->setDateTextFormat(dateCount, formatCalendar);
+            day++;
+            if (day > dateCount.daysInMonth()) {month++; day = 1;}
+            if (month > 12) {year++; month = 1;}
+            dateCount.setDate(year, month, day);
+        }
+        //
+
+        eventsByPointer[i]->destroyed();        //Удаление самого указателя (объекта)
+
+        //Обработка видимости кнопок добавления задачи на полях отображения информации
+        ui->listWidgetTasksForDay->clear();
+        ui->pushButtonAddTask_OnWidget->setVisible(true);
+        ui->pushButtonAddTask_OnTable->setVisible(true);
+        ui->labelAdd_OnCalendar->setVisible(true);
+        ui->labelAdd_OnTable->setVisible(true);
+        ui->listWidgetTasksForDay->clear();
+        //
+    }
+
+    int i = ui->tableWidgetMainTable->rowCount();
+    while (i >= 0) {ui->tableWidgetMainTable->removeRow(i); i--;}
+    eventsByPointer.clear();
+}
+//
+
+
+
+//Меню Файл->Закрыть
+void MainWindow::on_actionClose_triggered()
+{
+    DeleteAllTasks();
 }
 //

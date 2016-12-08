@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/AllIcons">
         <file>RemindIcon.png</file>
+        <file>AddIcon.png</file>
+        <file>CustomIcon.png</file>
+        <file>RemoveIcon.png</file>
+        <file>TodayIcon.png</file>
     </qresource>
 </RCC>

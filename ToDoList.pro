@@ -16,16 +16,19 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     addnewtask.cpp \
     event.cpp \
-    remindwindow.cpp
+    remindwindow.cpp \
+    detailswindow.cpp
 
 HEADERS  += mainwindow.h \
     addnewtask.h \
     event.h \
-    remindwindow.h
+    remindwindow.h \
+    detailswindow.h
 
 FORMS    += mainwindow.ui \
     addnewtask.ui \
-    remindwindow.ui
+    remindwindow.ui \
+    detailswindow.ui
 
 RESOURCES += \
     icons.qrc

@@ -28,9 +28,10 @@ public:
     void FillCalendar();
     void FillListUnderCalendar(Event *task, QColor color);
     void FillTaskTable();
-    void ReadFromFile ();
-    void SaveToFile ();
+    void ReadFromFile (QString openFileName);
+    void SaveToFile (QString saveFileName);
     void DeleteTask (QString nameTask, QColor colorTask);
+    void DeleteAllTasks ();
 
     QTimer *mainTimer;
 
@@ -61,6 +62,10 @@ private slots:
 
     void on_pushButtonDeleteTask_clicked();
 
+    void on_actionExit_triggered();
+
+    void on_actionClose_triggered();
+
 public slots:
     void mainTimer_overflow();
 
@@ -69,6 +74,8 @@ private:
 
     bool doubleClickChk = false;
     QVector <Event*> eventsByPointer;
+
+    QString fileName = "";
 };
 
 #endif // MAINWINDOW_H
