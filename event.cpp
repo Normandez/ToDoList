@@ -181,6 +181,16 @@ void Event::SetFinishTime(QString time)
     finishTime = QTime::fromString(time, "hh:mm");
 }
 
+void Event::SetRemindDate(QString date)
+{
+    remindDate = QDate::fromString(date, "dd.MM.yyyy");
+}
+
+void Event::SetRemindTime(QString time)
+{
+    remindTime = QTime::fromString(time, "hh:mm");
+}
+
 void Event::SetRepeatOfTask (short repeatCode)
 {
     repeatOfTask = repeatCode;

@@ -556,7 +556,7 @@ void MainWindow::on_calendarWidget_selectionChanged()
 void MainWindow::ReadFromFile()
 {
     //XML Чтение
-    Event *objXML;
+    /*Event *objXML;
 
     QFile fileXML("asdddd.xml");
     if(!fileXML.open(QFile::ReadOnly | QFile::Text))
@@ -600,26 +600,31 @@ void MainWindow::ReadFromFile()
                     objXML->SetFinishTime(xmlReader.readElementText());
                     xmlReader.readNextStartElement();
                 }
-
+                if(xmlReader.name() == "RemindDate")
+                {
+                    objXML->SetRemindDate(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "RemindTime")
+                {
+                    objXML->SetRemindTime(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
+                }
                 if(xmlReader.name() == "RepeatOfTask")
                 {
                     objXML->SetRepeatOfTask(xmlReader.readElementText().toInt());
                     xmlReader.readNextStartElement();
                 }
-
                 if(xmlReader.name() == "RemindOfTask")
                 {
                     objXML->SetRemindOfTask(xmlReader.readElementText().toInt());
                     xmlReader.readNextStartElement();
                 }
-
                 if(xmlReader.name() == "RemindComplete")
                 {
                     objXML->SetRemindComplete(xmlReader.readElementText().toInt());
                     xmlReader.readNextStartElement();
                 }
-
-
                 if(xmlReader.name() == "Description")
                 {
                     objXML->SetDescriptionOfTask(xmlReader.readElementText());
@@ -640,10 +645,10 @@ void MainWindow::ReadFromFile()
 
         FillCalendar();
         FillTaskTable();
-    }
+    }*/
 
     //JSON Чтение
-    /*Event *objJSON;
+    Event *objJSON;
     QFile fileJSON("asdddd.json");
     if (!fileJSON.open(QIODevice::ReadOnly))
     {
@@ -666,12 +671,14 @@ void MainWindow::ReadFromFile()
         objJSON->SetStartTime(nEvent[3].toString());
         objJSON->SetFinishTime(nEvent[4].toString());
 
-        objJSON->SetRepeatOfTask(nEvent[5].toInt());
-        objJSON->SetRemindOfTask(nEvent[6].toInt());
-        objJSON->SetRemindComplete(nEvent[7].toInt());
+        objJSON->SetRemindDate(nEvent[5].toString());
+        objJSON->SetRemindTime(nEvent[6].toString());
+        objJSON->SetRepeatOfTask(nEvent[7].toInt());
+        objJSON->SetRemindOfTask(nEvent[8].toInt());
+        objJSON->SetRemindComplete(nEvent[9].toInt());
 
-        objJSON->SetDescriptionOfTask(nEvent[8].toString());
-        objJSON->SetColor(nEvent[9].toString());
+        objJSON->SetDescriptionOfTask(nEvent[10].toString());
+        objJSON->SetColor(nEvent[11].toString());
 
         eventsByPointer.push_back(objJSON);
         ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
@@ -680,7 +687,7 @@ void MainWindow::ReadFromFile()
     fileJSON.close();
 
     FillCalendar();
-    FillTaskTable();*/
+    FillTaskTable();
 }
 //
 
@@ -690,7 +697,7 @@ void MainWindow::ReadFromFile()
 void MainWindow::SaveToFile()
 {
     //ЗАПИСЬ В XML ФАЙЛ
-    QFile fileXML("asdddd.xml");
+    /*QFile fileXML("asdddd.xml");
     fileXML.open(QIODevice::WriteOnly | QIODevice::Truncate);
 
     QXmlStreamWriter xmlWriter(&fileXML);
@@ -709,6 +716,8 @@ void MainWindow::SaveToFile()
         xmlWriter.writeTextElement("FinishDate",eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
         xmlWriter.writeTextElement("StartTime", eventsByPointer[i]->GetStartTime().toString("hh:mm"));
         xmlWriter.writeTextElement("FinishTime", eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
+        xmlWriter.writeTextElement("RemindDate", eventsByPointer[i]->GetRemindDate().toString("dd.MM.yyyy"));
+        xmlWriter.writeTextElement("RemindTime", eventsByPointer[i]->GetRemindTime().toString("hh:mm"));
         xmlWriter.writeTextElement("RepeatOfTask", QString::number(eventsByPointer[i]->GetRepeatOfTask()));
         xmlWriter.writeTextElement("RemindOfTask", QString::number(eventsByPointer[i]->GetRemindOfTask()));
         xmlWriter.writeTextElement("RemindComplete", QString::number(eventsByPointer[i]->GetRemindComplete()));
@@ -717,10 +726,10 @@ void MainWindow::SaveToFile()
         xmlWriter.writeEndElement();
     }
     xmlWriter.writeEndDocument();
-    fileXML.close();
+    fileXML.close();*/
 
     //ЗАПИСЬ В JSON
-    /*QFile fileJSON("asdddd.json");
+    QFile fileJSON("asdddd.json");
     if (!fileJSON.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         qWarning("Couldn't open save file.");
@@ -737,6 +746,8 @@ void MainWindow::SaveToFile()
         data.append(eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
         data.append(eventsByPointer[i]->GetStartTime().toString("hh:mm"));
         data.append(eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
+        data.append(eventsByPointer[i]->GetRemindDate().toString("dd.MM.yyyy"));
+        data.append(eventsByPointer[i]->GetRemindTime().toString("hh:mm"));
         data.append(eventsByPointer[i]->GetRepeatOfTask());
         data.append(eventsByPointer[i]->GetRemindOfTask());
         data.append(eventsByPointer[i]->GetRemindComplete());
@@ -746,7 +757,7 @@ void MainWindow::SaveToFile()
     }
     QJsonDocument saveDoc(json);
     fileJSON.write(saveDoc.toJson());
-    fileJSON.close();*/
+    fileJSON.close();
 }
 //
 
