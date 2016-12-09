@@ -5,5 +5,10 @@
         <file>CustomIcon.png</file>
         <file>RemoveIcon.png</file>
         <file>TodayIcon.png</file>
+        <file>CloseIcon.png</file>
+        <file>ExitIcon.png</file>
+        <file>OpenIcon.png</file>
+        <file>SaveAsIcon.png</file>
+        <file>SaveIcon.png</file>
     </qresource>
 </RCC>

@@ -50,12 +50,12 @@ public:
     void SetFinishDate(QString);
     void SetStartTime(QString);
     void SetFinishTime(QString);
-    void SetRemindTime(QString);
-    void SetRemindDate(QString);
     void SetRepeatOfTask (short repeatCode);
     void SetRemindOfTask (short remindCode);
     void SetRemindComplete (short code);
     void SetRemind ();
+    void SetRemindDate (QString date);
+    void SetRemindTime (QString time);
     void SetDescriptionOfTask(QString);
 };
 //

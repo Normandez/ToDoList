@@ -38,12 +38,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //
 
     //Инициализация ТулБара
-    ui->mainToolBar->addWidget(ui->pushButtonToday);
+    ui->mainToolBar->addAction(ui->actionToday);
     ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addWidget(ui->pushButtonAddTask_Main);
-    ui->mainToolBar->addWidget(ui->pushButtonCustomTask);
+    ui->mainToolBar->addAction(ui->actionAddTask);
+    ui->mainToolBar->addAction(ui->actionCustomTask);
     ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addWidget(ui->pushButtonDeleteTask);
+    ui->mainToolBar->addAction(ui->actionDeleteTask);
     //
 }
 //
@@ -78,6 +78,8 @@ void MainWindow::AddTask ()
     }
     //
 
+    ui->actionClose->setEnabled(true);
+
     task->SetColor(QColor(rand()%255+1, rand()%255+1, rand()%255+1));       //Случайный выбор цвета
 
     task->SetRemind();
@@ -91,15 +93,6 @@ void MainWindow::AddTask ()
     ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки
 
     FillTaskTable();        //Заполнение таблицы
-}
-//
-
-
-
-//Кнопка "Добавить задачу"
-void MainWindow::on_pushButtonAddTask_Main_clicked()
-{
-    AddTask();
 }
 //
 
@@ -120,17 +113,6 @@ void MainWindow::on_pushButtonAddTask_OnWidget_clicked()
 void MainWindow::on_pushButtonAddTask_OnTable_clicked()
 {
     AddTask();
-}
-//
-
-
-
-//Кнопка "Сегодня"
-void MainWindow::on_pushButtonToday_clicked()
-{
-    QDate today = QDate::currentDate();;
-    ui->calendarWidget->setSelectedDate(today);
-    ui->calendarWidget->setFocus();
 }
 //
 
@@ -209,49 +191,6 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
             FillTaskTable();
         }
     }
-}
-//
-
-
-
-//Кнопка "Изменить задачу"
-void MainWindow::on_pushButtonCustomTask_clicked()
-{
-    QString nameTask;
-    QColor colorTask;
-
-    //Получение названия задачи из календаря (выбрать задачу из списка под ним)
-    if (ui->tabWidgetMain->currentIndex() == 0 && ui->listWidgetTasksForDay->selectedItems().count() != 0)
-    {
-        nameTask = ui->listWidgetTasksForDay->selectedItems().at(0)->text();
-
-        //Выведение только имени из всего текста айтема и цвета
-        short i = 0, count = 0;
-        bool chkNameStart = false;
-        QString buf = "";
-        while (i < nameTask.length())
-        {
-            if (nameTask[i] == '"') {if (count == 0) i++; chkNameStart = true; count++;}
-            if (nameTask[i] == '"' && count == 2) break;
-            if (chkNameStart) buf += nameTask[i];
-            i++;
-        }
-        nameTask = buf;
-        colorTask = ui->listWidgetTasksForDay->selectedItems().at(0)->backgroundColor();
-        //
-    }
-    //
-
-        //Получение названия задачи из таблицы (выделить его)
-        else if (ui->tabWidgetMain->currentIndex() == 1 && ui->tableWidgetMainTable->selectedItems().count() != 0)
-        {
-            nameTask = ui->tableWidgetMainTable->item(ui->tableWidgetMainTable->selectedItems().at(0)->row(), 0)->text();
-            colorTask = ui->tableWidgetMainTable->item(ui->tableWidgetMainTable->selectedItems().at(0)->row(), 0)->textColor();
-        }
-        //
-            else return;
-
-    CustomTask(nameTask, colorTask);
 }
 //
 
@@ -567,19 +506,7 @@ void MainWindow::ReadFromFile(QString openFileName)
     if (openFileName.length() != 0) DeleteAllTasks();       //Предварительная очистка интерфейса
 
     //XML Чтение
-<<<<<<< HEAD
     if(openFileName.indexOf(".xml") > 0)
-=======
-    /*Event *objXML;
-
-    QFile fileXML("asdddd.xml");
-    if(!fileXML.open(QFile::ReadOnly | QFile::Text))
-        QMessageBox::warning(this,
-                              "Ошибка файла",
-                              "Не удалось открыть файл",
-                              QMessageBox::Ok);
-    else
->>>>>>> ForMerging
     {
         Event *objXML;
 
@@ -596,53 +523,8 @@ void MainWindow::ReadFromFile(QString openFileName)
 
             while(!xmlReader.atEnd())
             {
-<<<<<<< HEAD
 
                 if(xmlReader.isStartElement() && xmlReader.name() != "resources")
-=======
-                objXML = new Event ();
-                if(xmlReader.name() == "NameOfEvent")
-                {
-                    objXML->SetNameOfTask(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "StartDate")
-                {
-                    objXML->SetStartDate(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "FinishDate")
-                {
-                    objXML->SetFinishDate(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "StartTime")
-                {
-                    objXML->SetStartTime(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "FinishTime")
-                {
-                    objXML->SetFinishTime(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "RemindDate")
-                {
-                    objXML->SetRemindDate(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "RemindTime")
-                {
-                    objXML->SetRemindTime(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "RepeatOfTask")
-                {
-                    objXML->SetRepeatOfTask(xmlReader.readElementText().toInt());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "RemindOfTask")
->>>>>>> ForMerging
                 {
                     objXML = new Event ();
                     if(xmlReader.name() == "NameOfEvent")
@@ -668,6 +550,18 @@ void MainWindow::ReadFromFile(QString openFileName)
                     if(xmlReader.name() == "FinishTime")
                     {
                         objXML->SetFinishTime(xmlReader.readElementText());
+                        xmlReader.readNextStartElement();
+                    }
+
+                    if(xmlReader.name() == "RemindDate")
+                    {
+                        objXML->SetRemindDate(xmlReader.readElementText());
+                        xmlReader.readNextStartElement();
+                    }
+
+                    if(xmlReader.name() == "RemindTime")
+                    {
+                        objXML->SetRemindTime(xmlReader.readElementText());
                         xmlReader.readNextStartElement();
                     }
 
@@ -704,53 +598,20 @@ void MainWindow::ReadFromFile(QString openFileName)
                         ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
                     }
                 }
-<<<<<<< HEAD
 
                 xmlReader.readNext();
-=======
-                if(xmlReader.name() == "RemindComplete")
-                {
-                    objXML->SetRemindComplete(xmlReader.readElementText().toInt());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "Description")
-                {
-                    objXML->SetDescriptionOfTask(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                }
-                if(xmlReader.name() == "Color")
-                {
-                    objXML->SetColor(xmlReader.readElementText());
-                    xmlReader.readNextStartElement();
-                    eventsByPointer.push_back(objXML);
-                    ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
-                }
->>>>>>> ForMerging
             }
             fileXML.close();
 
             FillCalendar();
             FillTaskTable();
         }
-<<<<<<< HEAD
         return;
     }
     //
 
     //JSON Чтение
     if(openFileName.indexOf(".json") > 0)
-=======
-        fileXML.close();
-
-        FillCalendar();
-        FillTaskTable();
-    }*/
-
-    //JSON Чтение
-    Event *objJSON;
-    QFile fileJSON("asdddd.json");
-    if (!fileJSON.open(QIODevice::ReadOnly))
->>>>>>> ForMerging
     {
         Event *objJSON;
         QFile fileJSON(openFileName);
@@ -775,23 +636,14 @@ void MainWindow::ReadFromFile(QString openFileName)
             objJSON->SetStartTime(nEvent[3].toString());
             objJSON->SetFinishTime(nEvent[4].toString());
 
-<<<<<<< HEAD
-            objJSON->SetRepeatOfTask(nEvent[5].toInt());
-            objJSON->SetRemindOfTask(nEvent[6].toInt());
-            objJSON->SetRemindComplete(nEvent[7].toInt());
+            objJSON->SetRemindDate(nEvent[5].toString());
+            objJSON->SetRemindTime(nEvent[6].toString());
+            objJSON->SetRepeatOfTask(nEvent[7].toInt());
+            objJSON->SetRemindOfTask(nEvent[8].toInt());
+            objJSON->SetRemindComplete(nEvent[9].toInt());
 
-            objJSON->SetDescriptionOfTask(nEvent[8].toString());
-            objJSON->SetColor(nEvent[9].toString());
-=======
-        objJSON->SetRemindDate(nEvent[5].toString());
-        objJSON->SetRemindTime(nEvent[6].toString());
-        objJSON->SetRepeatOfTask(nEvent[7].toInt());
-        objJSON->SetRemindOfTask(nEvent[8].toInt());
-        objJSON->SetRemindComplete(nEvent[9].toInt());
-
-        objJSON->SetDescriptionOfTask(nEvent[10].toString());
-        objJSON->SetColor(nEvent[11].toString());
->>>>>>> ForMerging
+            objJSON->SetDescriptionOfTask(nEvent[10].toString());
+            objJSON->SetColor(nEvent[11].toString());
 
             objJSON->SetRemindComplete(0);
             eventsByPointer.push_back(objJSON);
@@ -803,14 +655,9 @@ void MainWindow::ReadFromFile(QString openFileName)
         FillCalendar();
         FillTaskTable();
 
-<<<<<<< HEAD
         return;
     }
     //
-=======
-    FillCalendar();
-    FillTaskTable();
->>>>>>> ForMerging
 }
 //
 
@@ -820,22 +667,16 @@ void MainWindow::ReadFromFile(QString openFileName)
 void MainWindow::SaveToFile(QString saveFileName)
 {
     //ЗАПИСЬ В XML ФАЙЛ
-<<<<<<< HEAD
     if (saveFileName.indexOf(".xml") > 0)
     {
         QFile fileXML(saveFileName);
         fileXML.open(QIODevice::WriteOnly | QIODevice::Truncate);
-=======
-    /*QFile fileXML("asdddd.xml");
-    fileXML.open(QIODevice::WriteOnly | QIODevice::Truncate);
->>>>>>> ForMerging
 
         QXmlStreamWriter xmlWriter(&fileXML);
         xmlWriter.setAutoFormatting(true);
         xmlWriter.writeStartDocument();
         xmlWriter.writeStartElement("resources");
 
-<<<<<<< HEAD
         QString ev;
         for(int i = 0; i < eventsByPointer.count(); i++)
         {
@@ -847,6 +688,8 @@ void MainWindow::SaveToFile(QString saveFileName)
             xmlWriter.writeTextElement("FinishDate",eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
             xmlWriter.writeTextElement("StartTime", eventsByPointer[i]->GetStartTime().toString("hh:mm"));
             xmlWriter.writeTextElement("FinishTime", eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
+            xmlWriter.writeTextElement("RemindDate", eventsByPointer[i]->GetRemindDate().toString("dd.MM.yyyy"));
+            xmlWriter.writeTextElement("RemindTime", eventsByPointer[i]->GetRemindTime().toString("hh:mm"));
             xmlWriter.writeTextElement("RepeatOfTask", QString::number(eventsByPointer[i]->GetRepeatOfTask()));
             xmlWriter.writeTextElement("RemindOfTask", QString::number(eventsByPointer[i]->GetRemindOfTask()));
             xmlWriter.writeTextElement("RemindComplete", QString::number(eventsByPointer[i]->GetRemindComplete()));
@@ -857,36 +700,6 @@ void MainWindow::SaveToFile(QString saveFileName)
         xmlWriter.writeEndDocument();
         fileXML.close();
 
-=======
-    QString ev;
-    for(int i = 0; i < eventsByPointer.count(); i++)
-    {
-        ev = "Event_";
-        ev = ev.append(QString::number(i + 1));
-        xmlWriter.writeStartElement(ev);
-        xmlWriter.writeTextElement("NameOfEvent", eventsByPointer[i]->GetNameOfTask());
-        xmlWriter.writeTextElement("StartDate", eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy"));
-        xmlWriter.writeTextElement("FinishDate",eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
-        xmlWriter.writeTextElement("StartTime", eventsByPointer[i]->GetStartTime().toString("hh:mm"));
-        xmlWriter.writeTextElement("FinishTime", eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
-        xmlWriter.writeTextElement("RemindDate", eventsByPointer[i]->GetRemindDate().toString("dd.MM.yyyy"));
-        xmlWriter.writeTextElement("RemindTime", eventsByPointer[i]->GetRemindTime().toString("hh:mm"));
-        xmlWriter.writeTextElement("RepeatOfTask", QString::number(eventsByPointer[i]->GetRepeatOfTask()));
-        xmlWriter.writeTextElement("RemindOfTask", QString::number(eventsByPointer[i]->GetRemindOfTask()));
-        xmlWriter.writeTextElement("RemindComplete", QString::number(eventsByPointer[i]->GetRemindComplete()));
-        xmlWriter.writeTextElement("Description", eventsByPointer[i]->GetDescriptionOfTask());
-        xmlWriter.writeTextElement("Color",  eventsByPointer[i]->GetColor().name());
-        xmlWriter.writeEndElement();
-    }
-    xmlWriter.writeEndDocument();
-    fileXML.close();*/
-
-    //ЗАПИСЬ В JSON
-    QFile fileJSON("asdddd.json");
-    if (!fileJSON.open(QIODevice::WriteOnly | QIODevice::Truncate))
-    {
-        qWarning("Couldn't open save file.");
->>>>>>> ForMerging
         return;
     }
     //
@@ -894,7 +707,6 @@ void MainWindow::SaveToFile(QString saveFileName)
     //ЗАПИСЬ В JSON
     if (saveFileName.indexOf(".json") > 0)
     {
-<<<<<<< HEAD
         QFile fileJSON(saveFileName);
         if (!fileJSON.open(QIODevice::WriteOnly | QIODevice::Truncate))
         {
@@ -912,6 +724,8 @@ void MainWindow::SaveToFile(QString saveFileName)
             data.append(eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
             data.append(eventsByPointer[i]->GetStartTime().toString("hh:mm"));
             data.append(eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
+            data.append(eventsByPointer[i]->GetRemindDate().toString("dd.MM.yyyy"));
+            data.append(eventsByPointer[i]->GetRemindTime().toString("hh:mm"));
             data.append(eventsByPointer[i]->GetRepeatOfTask());
             data.append(eventsByPointer[i]->GetRemindOfTask());
             data.append(eventsByPointer[i]->GetRemindComplete());
@@ -926,26 +740,6 @@ void MainWindow::SaveToFile(QString saveFileName)
         return;
     }
     //
-=======
-        QJsonArray data;
-        data.append(eventsByPointer[i]->GetNameOfTask());
-        data.append(eventsByPointer[i]->GetStartDate().toString("dd.MM.yyyy"));
-        data.append(eventsByPointer[i]->GetFinishDate().toString("dd.MM.yyyy"));
-        data.append(eventsByPointer[i]->GetStartTime().toString("hh:mm"));
-        data.append(eventsByPointer[i]->GetFinishTime().toString("hh:mm"));
-        data.append(eventsByPointer[i]->GetRemindDate().toString("dd.MM.yyyy"));
-        data.append(eventsByPointer[i]->GetRemindTime().toString("hh:mm"));
-        data.append(eventsByPointer[i]->GetRepeatOfTask());
-        data.append(eventsByPointer[i]->GetRemindOfTask());
-        data.append(eventsByPointer[i]->GetRemindComplete());
-        data.append(eventsByPointer[i]->GetDescriptionOfTask());
-        data.append(eventsByPointer[i]->GetColor().name());
-        json["Event_" + QString::number(i+1)] = data;
-    }
-    QJsonDocument saveDoc(json);
-    fileJSON.write(saveDoc.toJson());
-    fileJSON.close();
->>>>>>> ForMerging
 }
 //
 
@@ -953,7 +747,10 @@ void MainWindow::SaveToFile(QString saveFileName)
 
 //Меню "Файл->Открыть..."
 void MainWindow::on_actionOpen_triggered()
-{   
+{
+    ui->actionSave->setEnabled(true);
+    ui->actionClose->setEnabled(true);
+
     QFileDialog *openFileDialog = new QFileDialog (this);
     fileName = openFileDialog->getOpenFileName(this, "Открыть...", ".\\", tr("XML (*.xml);;JSON (*.json)" ));
     ReadFromFile(fileName);
@@ -965,7 +762,6 @@ void MainWindow::on_actionOpen_triggered()
 //Меню "Файл->Сохранить"
 void MainWindow::on_actionSave_triggered()
 {
-    if (fileName.length() == 0) fileName = ".\\Unnamed.xml";        //ЭТО НАДО ВЫРЕЗАТЬ!
     SaveToFile(fileName);
 }
 //
@@ -975,6 +771,8 @@ void MainWindow::on_actionSave_triggered()
 //Меню "Файл->Сохранить как..."
 void MainWindow::on_actionSaveAs_triggered()
 {
+    ui->actionSave->setEnabled(true);
+
     QFileDialog *saveFileDialog = new QFileDialog (this);
     fileName = saveFileDialog->getSaveFileName (this, "Сохранить как...", ".\\", tr("XML (*.xml);;JSON (*.json)" ));
     SaveToFile(fileName);
@@ -1024,49 +822,6 @@ void MainWindow::DeleteTask(QString nameTask, QColor colorTask)
             FillTaskTable();
         }
     }
-}
-//
-
-
-
-//Кнопка "Удалить задачу"
-void MainWindow::on_pushButtonDeleteTask_clicked()
-{
-    QString nameTask;
-    QColor colorTask;
-
-    //Получение названия задачи из календаря (выбрать задачу из списка под ним)
-    if (ui->tabWidgetMain->currentIndex() == 0 && ui->listWidgetTasksForDay->selectedItems().count() != 0)
-    {
-        nameTask = ui->listWidgetTasksForDay->selectedItems().at(0)->text();
-
-        //Выведение только имени из всего текста айтема и цвета
-        short i = 0, count = 0;
-        bool chkNameStart = false;
-        QString buf = "";
-        while (i < nameTask.length())
-        {
-            if (nameTask[i] == '"') {if (count == 0) i++; chkNameStart = true; count++;}
-            if (nameTask[i] == '"' && count == 2) break;
-            if (chkNameStart) buf += nameTask[i];
-            i++;
-        }
-        nameTask = buf;
-        colorTask = ui->listWidgetTasksForDay->selectedItems().at(0)->backgroundColor();
-        //
-    }
-    //
-
-        //Получение названия задачи из таблицы (выделить его)
-        else if (ui->tabWidgetMain->currentIndex() == 1 && ui->tableWidgetMainTable->selectedItems().count() != 0)
-        {
-            nameTask = ui->tableWidgetMainTable->item(ui->tableWidgetMainTable->selectedItems().at(0)->row(), 0)->text();
-            colorTask = ui->tableWidgetMainTable->item(ui->tableWidgetMainTable->selectedItems().at(0)->row(), 0)->textColor();
-        }
-        //
-            else return;
-
-    DeleteTask(nameTask, colorTask);
 }
 //
 
@@ -1150,6 +905,150 @@ void MainWindow::DeleteAllTasks ()
 //Меню Файл->Закрыть
 void MainWindow::on_actionClose_triggered()
 {
+    fileName = "";
+    ui->actionSave->setEnabled(false);
+    ui->actionClose->setEnabled(false);
+
     DeleteAllTasks();
+}
+//
+
+
+
+//Действие при активации айтема под календарем
+void MainWindow::on_listWidgetTasksForDay_itemSelectionChanged()
+{
+    if (ui->listWidgetTasksForDay->selectedItems().count() != 0) {ui->actionCustomTask->setEnabled(true); ui->actionDeleteTask->setEnabled(true);}
+        else {ui->actionCustomTask->setEnabled(false); ui->actionDeleteTask->setEnabled(false);}
+}
+//
+
+
+
+//Действие при активации айтема в таблице
+void MainWindow::on_tableWidgetMainTable_itemSelectionChanged()
+{
+    if (ui->tableWidgetMainTable->selectedItems().count() != 0) {ui->actionCustomTask->setEnabled(true); ui->actionDeleteTask->setEnabled(true);}
+        else {ui->actionCustomTask->setEnabled(false); ui->actionDeleteTask->setEnabled(false);}
+}
+//
+
+
+
+//Действие при изменении закладки
+void MainWindow::on_tabWidgetMain_currentChanged(int index)
+{
+    //Выбрана закладка с календарем
+    if (index == 0)
+    {
+        ui->actionToday->setEnabled(true);
+        if (ui->listWidgetTasksForDay->selectedItems().count() != 0) {ui->actionCustomTask->setEnabled(true); ui->actionDeleteTask->setEnabled(true);}
+            else {ui->actionCustomTask->setEnabled(false); ui->actionDeleteTask->setEnabled(false);}
+    }
+    //
+
+    //Выбрана закладка с таблицей
+    if (index == 1)
+    {
+        ui->actionToday->setEnabled(false);
+        if (ui->tableWidgetMainTable->selectedItems().count() != 0) {ui->actionCustomTask->setEnabled(true); ui->actionDeleteTask->setEnabled(true);}
+            else {ui->actionCustomTask->setEnabled(false); ui->actionDeleteTask->setEnabled(false);}
+    }
+    //
+}
+//
+
+
+
+//Меню Инструменты->Сегодня
+void MainWindow::on_actionToday_triggered()
+{
+    QDate today = QDate::currentDate();;
+    ui->calendarWidget->setSelectedDate(today);
+    ui->calendarWidget->setFocus();
+
+    on_calendarWidget_clicked(today);       //Выдача списка задач если они есть
+}
+//
+
+
+
+//Меню Инструменты->Добавить задачу
+void MainWindow::on_actionAddTask_triggered()
+{
+    AddTask();
+}
+//
+
+
+
+//Функция выделения в памяти конкретной задачи
+void MainWindow::SelectCurrentTask (QString *nameTaskPointer, QColor *colorTaskPointer)
+{
+    QString nameTask = *nameTaskPointer;
+    QColor colorTask = *colorTaskPointer;
+
+    //Получение названия задачи из календаря (выбрать задачу из списка под ним)
+    if (ui->tabWidgetMain->currentIndex() == 0 && ui->listWidgetTasksForDay->selectedItems().count() != 0)
+    {
+        nameTask = ui->listWidgetTasksForDay->selectedItems().at(0)->text();
+
+        //Выведение только имени из всего текста айтема и цвета
+        short i = 0, count = 0;
+        bool chkNameStart = false;
+        QString buf = "";
+        while (i < nameTask.length())
+        {
+            if (nameTask[i] == '"') {if (count == 0) i++; chkNameStart = true; count++;}
+            if (nameTask[i] == '"' && count == 2) break;
+            if (chkNameStart) buf += nameTask[i];
+            i++;
+        }
+        nameTask = buf;
+        colorTask = ui->listWidgetTasksForDay->selectedItems().at(0)->backgroundColor();
+
+        *nameTaskPointer = nameTask;
+        *colorTaskPointer = colorTask;
+        //
+    }
+    //
+
+        //Получение названия задачи из таблицы (выделить его)
+        else if (ui->tabWidgetMain->currentIndex() == 1 && ui->tableWidgetMainTable->selectedItems().count() != 0)
+        {
+            nameTask = ui->tableWidgetMainTable->item(ui->tableWidgetMainTable->selectedItems().at(0)->row(), 0)->text();
+            colorTask = ui->tableWidgetMainTable->item(ui->tableWidgetMainTable->selectedItems().at(0)->row(), 0)->textColor();
+
+            *nameTaskPointer = nameTask;
+            *colorTaskPointer = colorTask;
+        }
+        //
+            else return;
+}
+//
+
+
+
+//Меню Инструменты->Изменить задачу
+void MainWindow::on_actionCustomTask_triggered()
+{
+    QString *nameTask = new QString ();
+    QColor *colorTask = new QColor ();
+    SelectCurrentTask(nameTask, colorTask);
+
+    CustomTask(*nameTask, *colorTask);
+}
+//
+
+
+
+//Меню Инструменты->Удалить задачу
+void MainWindow::on_actionDeleteTask_triggered()
+{
+    QString *nameTask = new QString ();
+    QColor *colorTask = new QColor ();
+    SelectCurrentTask(nameTask, colorTask);
+
+    DeleteTask(*nameTask, *colorTask);
 }
 //
