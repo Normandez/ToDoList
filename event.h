@@ -17,8 +17,8 @@ private:
     QDate finishDate;
     QTime startTime;
     QTime finishTime;
-    short repeatOfTask;
-    short remindOfTask;
+    short repeatOfTask:3;
+    short remindOfTask:5;
     short remindComplete = 0;
     QDate remindDate;
     QTime remindTime;
