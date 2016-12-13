@@ -150,6 +150,18 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
             Event *task = new Event ();
             task = eventsByPointer[i];
 
+            AddNewTask *customTaskWnd = new AddNewTask (this, task, chkCancel);
+            customTaskWnd->exec();
+
+            //Проверка нажатия отмены на окне редактирования задачи
+            if (*chkCancel)
+            {
+                task->destroyed();
+                delete chkCancel;
+                return;
+            }
+            //
+
             //Сброс календаря
             QTextCharFormat formatCalendar;
             formatCalendar.setBackground(Qt::white);
@@ -167,21 +179,9 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
             }
             //
 
-            AddNewTask *customTaskWnd = new AddNewTask (this, task, chkCancel);
-            customTaskWnd->exec();
-
             task->SetRemindComplete(0);     //Сброс совершённости напоминания
 
             FillCalendar();
-
-            //Проверка нажатия отмены на окне редактирования задачи
-            if (*chkCancel)
-            {
-                task->destroyed();
-                delete chkCancel;
-                continue;
-            }
-            //
 
             task->SetRemind();
 
@@ -189,6 +189,8 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
 
             if(ui->tabWidgetMain->currentIndex() == 0) FillListUnderCalendar(task, task->GetColor());       //Только если открыт календарь (!!! НЕ РАБОТАЕТ, ДАЖЕ ЕСЛИ ТРУ, ХЗ ЧЕГО. ДЕБАЖИЛ, ТАМ ТОЧНО ТРУ!!!)
             FillTaskTable();
+
+            return;
         }
     }
 }

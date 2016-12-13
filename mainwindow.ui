@@ -11,10 +11,13 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Аналог TODO list</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
+  </property>
+  <property name="locale">
+   <locale language="Russian" country="Ukraine"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTabWidget" name="tabWidgetMain">
