@@ -36,6 +36,9 @@ public:
 
     QTimer *mainTimer;
 
+protected:
+    virtual void closeEvent(QCloseEvent *e);
+
 private slots:
     void on_pushButtonAddTask_OnWidget_clicked();
 
@@ -73,6 +76,8 @@ private slots:
 
     void on_actionDeleteTask_triggered();
 
+    void on_actionAbout_triggered();
+
 public slots:
     void mainTimer_overflow();
 
@@ -80,6 +85,7 @@ private:
     Ui::MainWindow *ui;
 
     bool doubleClickChk = false;
+    bool savedStatusChk = true;
     QVector <Event*> eventsByPointer;
 
     QString fileName = "";

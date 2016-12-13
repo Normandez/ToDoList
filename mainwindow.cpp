@@ -3,6 +3,7 @@
 #include "event.h"
 #include "addnewtask.h"
 #include "remindwindow.h"
+#include "aboutwindow.h"
 #include <QMessageBox>
 #include <QTextCharFormat>
 #include <QFile>
@@ -15,6 +16,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFileDialog>
+#include <QCloseEvent>
 
 
 
@@ -64,7 +66,7 @@ MainWindow::~MainWindow()
 //Функция открытия окна добавления новой задачи
 void MainWindow::AddTask ()
 {
-    bool *chkCancel = new bool;
+    bool *chkCancel = new bool (true);
     Event *task = new Event();      //Создаем объект класса задачи
 
     AddNewTask *AddTaskWindow = new AddNewTask(this, ui->calendarWidget->selectedDate(), task, chkCancel);
@@ -93,6 +95,8 @@ void MainWindow::AddTask ()
     ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки
 
     FillTaskTable();        //Заполнение таблицы
+
+    savedStatusChk = false;
 }
 //
 
@@ -146,7 +150,7 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
     {
         if (eventsByPointer[i]->GetNameOfTask() == nameTask && eventsByPointer[i]->GetColor() == colorTask)
         {
-            bool *chkCancel = new bool;
+            bool *chkCancel = new bool (true);
             Event *task = new Event ();
             task = eventsByPointer[i];
 
@@ -189,6 +193,8 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
 
             if(ui->tabWidgetMain->currentIndex() == 0) FillListUnderCalendar(task, task->GetColor());       //Только если открыт календарь (!!! НЕ РАБОТАЕТ, ДАЖЕ ЕСЛИ ТРУ, ХЗ ЧЕГО. ДЕБАЖИЛ, ТАМ ТОЧНО ТРУ!!!)
             FillTaskTable();
+
+            savedStatusChk = false;
 
             return;
         }
@@ -608,6 +614,8 @@ void MainWindow::ReadFromFile(QString openFileName)
             FillCalendar();
             FillTaskTable();
         }
+        savedStatusChk = true;
+
         return;
     }
     //
@@ -657,6 +665,8 @@ void MainWindow::ReadFromFile(QString openFileName)
         FillCalendar();
         FillTaskTable();
 
+        savedStatusChk = true;
+
         return;
     }
     //
@@ -702,6 +712,8 @@ void MainWindow::SaveToFile(QString saveFileName)
         xmlWriter.writeEndDocument();
         fileXML.close();
 
+        savedStatusChk = true;
+
         return;
     }
     //
@@ -739,6 +751,8 @@ void MainWindow::SaveToFile(QString saveFileName)
         fileJSON.write(saveDoc.toJson());
         fileJSON.close();
 
+        savedStatusChk = true;
+
         return;
     }
     //
@@ -750,6 +764,37 @@ void MainWindow::SaveToFile(QString saveFileName)
 //Меню "Файл->Открыть..."
 void MainWindow::on_actionOpen_triggered()
 {
+    //Проверка сохранения данных
+    if (!savedStatusChk)
+    {
+        //Инициализация окна сообщения
+        QMessageBox *msg = new QMessageBox (this);
+        msg->setWindowTitle("Внимание!");
+        msg->setText("Все несохраненные данные будут потеряны!\n\nСохранить данные?");
+        msg->addButton("Да", QMessageBox::YesRole);
+        msg->addButton("Нет", QMessageBox::NoRole);
+        msg->addButton("Отмена", QMessageBox::RejectRole);
+        //
+
+        int dialogResult = msg->exec();
+
+        //Обработка результата диалогового окна
+        switch (dialogResult)
+        {
+        case 0:      //Нажата кнопка "Да"
+            if (fileName.length() != 0) on_actionSave_triggered();
+                else on_actionSaveAs_triggered();
+
+            break;
+        case 1:       //Нажата кнопка "Нет"
+            break;
+        case 2:     //Нажата кнопка "Отмена"
+            return;
+        }
+        //
+    }
+    //
+
     ui->actionSave->setEnabled(true);
     ui->actionClose->setEnabled(true);
 
@@ -822,6 +867,10 @@ void MainWindow::DeleteTask(QString nameTask, QColor colorTask)
 
             ui->tableWidgetMainTable->removeRow(i);
             FillTaskTable();
+
+            savedStatusChk = false;
+
+            return;
         }
     }
 }
@@ -899,6 +948,8 @@ void MainWindow::DeleteAllTasks ()
     int i = ui->tableWidgetMainTable->rowCount();
     while (i >= 0) {ui->tableWidgetMainTable->removeRow(i); i--;}
     eventsByPointer.clear();
+
+    savedStatusChk = false;
 }
 //
 
@@ -906,7 +957,38 @@ void MainWindow::DeleteAllTasks ()
 
 //Меню Файл->Закрыть
 void MainWindow::on_actionClose_triggered()
-{
+{ 
+    //Проверка сохранения данных
+    if (!savedStatusChk)
+    {
+        //Инициализация окна сообщения
+        QMessageBox *msg = new QMessageBox (this);
+        msg->setWindowTitle("Внимание!");
+        msg->setText("Все несохраненные данные будут потеряны!\n\nСохранить данные?");
+        msg->addButton("Да", QMessageBox::YesRole);
+        msg->addButton("Нет", QMessageBox::NoRole);
+        msg->addButton("Отмена", QMessageBox::RejectRole);
+        //
+
+        int dialogResult = msg->exec();
+
+        //Обработка результата диалогового окна
+        switch (dialogResult)
+        {
+        case 0:      //Нажата кнопка "Да"
+            if (fileName.length() != 0) on_actionSave_triggered();
+                else on_actionSaveAs_triggered();
+
+            break;
+        case 1:       //Нажата кнопка "Нет"
+            break;
+        case 2:     //Нажата кнопка "Отмена"
+            return;
+        }
+        //
+    }
+    //
+
     fileName = "";
     ui->actionSave->setEnabled(false);
     ui->actionClose->setEnabled(false);
@@ -1052,5 +1134,55 @@ void MainWindow::on_actionDeleteTask_triggered()
     SelectCurrentTask(nameTask, colorTask);
 
     DeleteTask(*nameTask, *colorTask);
+}
+//
+
+
+
+//Сохранение данных перед закрытием программы
+void MainWindow::closeEvent(QCloseEvent *e)
+{
+    //Проверка сохранения данных
+    if (!savedStatusChk)
+    {
+        //Инициализация окна сообщения
+        QMessageBox *msg = new QMessageBox (this);
+        msg->setWindowTitle("Внимание!");
+        msg->setText("Все несохраненные данные будут потеряны!\n\nСохранить данные?");
+        msg->addButton("Да", QMessageBox::YesRole);
+        msg->addButton("Нет", QMessageBox::NoRole);
+        msg->addButton("Отмена", QMessageBox::RejectRole);
+        //
+
+        int dialogResult = msg->exec();
+
+        //Обработка результата диалогового окна
+        switch (dialogResult)
+        {
+        case 0:      //Нажата кнопка "Да"
+            if (fileName.length() != 0) on_actionSave_triggered();
+                else on_actionSaveAs_triggered();
+
+            break;
+        case 1:       //Нажата кнопка "Нет"
+            break;
+        case 2:     //Нажата кнопка "Отмена"
+            e->ignore();
+
+            return;
+        }
+        //
+    }
+    //
+}
+//
+
+
+
+//Меню Помощь->О программе
+void MainWindow::on_actionAbout_triggered()
+{
+    AboutWindow *wndAbout = new AboutWindow (this);
+    wndAbout->exec();
 }
 //

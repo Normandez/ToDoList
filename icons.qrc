@@ -11,5 +11,7 @@
         <file>SaveAsIcon.png</file>
         <file>SaveIcon.png</file>
         <file>AboutImage.jpg</file>
+        <file>HelpIcon.png</file>
+        <file>AboutIcon.ico</file>
     </qresource>
 </RCC>
