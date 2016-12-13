@@ -8,6 +8,8 @@ AboutWindow::AboutWindow(QWidget *parent) :
     ui(new Ui::AboutWindow)
 {
     ui->setupUi(this);
+
+    setWindowTitle("О программе");
 }
 
 

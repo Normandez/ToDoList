@@ -39,13 +39,24 @@ MainWindow::MainWindow(QWidget *parent) :
     mainTimer->start(5000);
     //
 
-    //Инициализация ТулБара
-    ui->mainToolBar->addAction(ui->actionToday);
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction(ui->actionAddTask);
-    ui->mainToolBar->addAction(ui->actionCustomTask);
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction(ui->actionDeleteTask);
+    //Инициализация тул бара с файловыми операциями
+    ui->toolBarFile->addAction(ui->actionOpen);
+    ui->toolBarFile->addSeparator();
+    ui->toolBarFile->addAction(ui->actionSave);
+    ui->toolBarFile->addAction(ui->actionSaveAs);
+    ui->toolBarFile->addSeparator();
+    ui->toolBarFile->addAction(ui->actionClose);
+    ui->toolBarFile->addSeparator();
+    ui->toolBarFile->addAction(ui->actionExit);
+    //
+
+    //Инициализация тул бара с инструментами
+    ui->toolBarTools->addAction(ui->actionToday);
+    ui->toolBarTools->addSeparator();
+    ui->toolBarTools->addAction(ui->actionAddTask);
+    ui->toolBarTools->addAction(ui->actionCustomTask);
+    ui->toolBarTools->addSeparator();
+    ui->toolBarTools->addAction(ui->actionDeleteTask);
     //
 }
 //
@@ -82,7 +93,13 @@ void MainWindow::AddTask ()
 
     ui->actionClose->setEnabled(true);
 
-    task->SetColor(QColor(rand()%255+1, rand()%255+1, rand()%255+1));       //Случайный выбор цвета
+    //Случайный выбор цвета
+    QColor chkColor;
+    chkColor.setRgb(255, 235, 187);
+    QColor clr = QColor(rand()%255+1, rand()%255+1, rand()%255+1);
+    if (clr == chkColor) clr = QColor(rand()%255+1, rand()%255+1, rand()%255+1);
+    task->SetColor(clr);
+    //
 
     task->SetRemind();
 
@@ -168,7 +185,9 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
 
             //Сброс календаря
             QTextCharFormat formatCalendar;
-            formatCalendar.setBackground(Qt::white);
+            QColor clr;
+            clr.setRgb(255, 235, 187);
+            formatCalendar.setBackground(clr);
             QDate dateCount = eventsByPointer[i]->GetStartDate();
             int day = dateCount.day();
             int month = dateCount.month();
@@ -837,7 +856,9 @@ void MainWindow::DeleteTask(QString nameTask, QColor colorTask)
         {
             //Сброс календаря
             QTextCharFormat formatCalendar;
-            formatCalendar.setBackground(Qt::white);
+            QColor clr;
+            clr.setRgb(255, 235, 187);
+            formatCalendar.setBackground(clr);
             QDate dateCount = eventsByPointer[i]->GetStartDate();
             int day = dateCount.day();
             int month = dateCount.month();
@@ -918,7 +939,9 @@ void MainWindow::DeleteAllTasks ()
     {
         //Сброс календаря
         QTextCharFormat formatCalendar;
-        formatCalendar.setBackground(Qt::white);
+        QColor clr;
+        clr.setRgb(255, 235, 187);
+        formatCalendar.setBackground(clr);
         QDate dateCount = eventsByPointer[i]->GetStartDate();
         int day = dateCount.day();
         int month = dateCount.month();

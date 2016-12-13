@@ -55,8 +55,9 @@ AddNewTask::AddNewTask(QWidget *parent, QDate startDate, Event *objTask, bool *c
     ui->comboBoxRemind->addItem("За 1 день");
     ui->comboBoxRemind->addItem("За 2 дня");
     ui->comboBoxRemind->addItem("За 1 неделю");
-    //ui->comboBoxRemind->addItem("Настроить"); Можно оставить как расширение функционала на потом
     //
+
+    setWindowTitle("Добавить задачу");
 }
 
 
@@ -119,6 +120,8 @@ AddNewTask::AddNewTask(QWidget *parent, Event *objTask, bool *cancel) :
     }
         else ui->comboBoxRepeat->setEnabled(true);
     //
+
+    setWindowTitle("Изменить задачу");
 }
 
 

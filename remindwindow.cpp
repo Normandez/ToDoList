@@ -15,6 +15,8 @@ RemindWindow::RemindWindow(QWidget *parent, QString name, QString dateAndTime, Q
     ui->labelName->setStyleSheet("QLabel{\ncolor: rgb(" + QString::number(color.red()) + ", " + QString::number(color.green()) + ", " + QString::number(color.blue()) + ");\n}");
     ui->labelStartDateAndTime->setText(dateAndTime);
     //
+
+    setWindowTitle("Сработало напоминание!");
 }
 
 

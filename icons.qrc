@@ -13,5 +13,7 @@
         <file>AboutImage.jpg</file>
         <file>HelpIcon.png</file>
         <file>AboutIcon.ico</file>
+        <file>ProgramImageIcon.png</file>
+        <file>QuestionIcon.png</file>
     </qresource>
 </RCC>
