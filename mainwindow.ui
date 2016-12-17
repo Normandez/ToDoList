@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>705</width>
-    <height>674</height>
+    <height>700</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>705</width>
-    <height>674</height>
+    <height>700</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>705</width>
-    <height>674</height>
+    <height>700</height>
    </size>
   </property>
   <property name="font">
@@ -491,6 +491,7 @@ background-color: qlineargradient(spread:pad, x1:1, y1:0.784, x2:1, y2:0, stop:0
     <bool>false</bool>
    </attribute>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
    <property name="checkable">
     <bool>false</bool>
@@ -679,7 +680,7 @@ background-color: qlineargradient(spread:pad, x1:1, y1:0.784, x2:1, y2:0, stop:0
   <action name="actionAbout">
    <property name="icon">
     <iconset resource="icons.qrc">
-     <normaloff>:/AllIcons/AboutIcon.ico</normaloff>:/AllIcons/AboutIcon.ico</iconset>
+     <normaloff>:/AllIcons/AboutIcon.png</normaloff>:/AllIcons/AboutIcon.png</iconset>
    </property>
    <property name="text">
     <string>О программе...</string>

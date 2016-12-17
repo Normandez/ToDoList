@@ -10,10 +10,10 @@
         <file>OpenIcon.png</file>
         <file>SaveAsIcon.png</file>
         <file>SaveIcon.png</file>
-        <file>AboutImage.jpg</file>
         <file>HelpIcon.png</file>
-        <file>AboutIcon.ico</file>
         <file>ProgramImageIcon.png</file>
         <file>QuestionIcon.png</file>
+        <file>AboutIcon.png</file>
+        <file>AboutImage.png</file>
     </qresource>
 </RCC>

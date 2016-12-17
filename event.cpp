@@ -1,12 +1,8 @@
 #include "event.h"
-QString GetNameOfTask();
-QDate GetStartDate();
-QDate GetFinishDate();
-QTime GetStartTime();
-QTime GetFinishTime();
-QString GetDescriptionOfTask();
 
 
+
+//Пустой конструктор
 Event::Event()
 {
     nameOfTask = "";
@@ -16,6 +12,7 @@ Event::Event()
     finishTime = QTime::currentTime();
     descriptionOfTask = "";
 }
+//
 
 
 
@@ -224,7 +221,6 @@ void Event::SetRemind ()
     {
     //Напоминание за 1 минуту
     case 1:
-    {
         minutes--;
         if (minutes < 0) {hours--; minutes = 59;}
         if (hours < 0) {day--; hours = 23;}
@@ -232,12 +228,11 @@ void Event::SetRemind ()
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 2);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 5 минут
     case 2:
-    {
         minutes = minutes - 5;
         if (minutes < 0) {hours--; minutes = 60 + minutes;}
         if (hours < 0) {day--; hours = 23;}
@@ -245,12 +240,11 @@ void Event::SetRemind ()
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 10 минут
     case 3:
-    {
         minutes = minutes - 10;
         if (minutes < 0) {hours--; minutes = 60 + minutes;}
         if (hours < 0) {day--; hours = 23;}
@@ -258,12 +252,11 @@ void Event::SetRemind ()
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 15 минут
     case 4:
-    {
         minutes = minutes - 15;
         if (minutes < 0) {hours--; minutes = 60 + minutes;}
         if (hours < 0) {day--; hours = 23;}
@@ -271,12 +264,11 @@ void Event::SetRemind ()
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 20 минут
     case 5:
-    {
         minutes = minutes - 20;
         if (minutes < 0) {hours--; minutes = 60 + minutes;}
         if (hours < 0) {day--; hours = 23;}
@@ -284,12 +276,11 @@ void Event::SetRemind ()
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 25 минут
     case 6:
-    {
         minutes = minutes - 25;
         if (minutes < 0) {hours--; minutes = 60 + minutes;}
         if (hours < 0) {day--; hours = 23;}
@@ -297,12 +288,11 @@ void Event::SetRemind ()
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 30 минут
     case 7:
-    {
         minutes = minutes - 30;
         if (minutes < 0) {hours--; minutes = 60 + minutes;}
         if (hours < 0) {day--; hours = 23;}
@@ -310,12 +300,11 @@ void Event::SetRemind ()
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 45 минут
     case 8:
-    {
         minutes = minutes - 45;
         if (minutes < 0) {hours--; minutes = 60 + minutes;}
         if (hours < 0) {day--; hours = 23;}
@@ -323,87 +312,79 @@ void Event::SetRemind ()
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 1 час
     case 9:
-    {
         hours--;
         if (hours < 0) {day--; hours = 23;}
         if (day < 1) {month--; if (month > 0) bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 2 часа
     case 10:
-    {
         hours = hours - 2;
         if (hours < 0) {day--; hours = 24 + hours;}
         if (day < 1) {month--; if (month > 0) bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 3 часа
     case 11:
-    {
         hours = hours - 3;
         if (hours < 0) {day--; hours = 24 + hours;}
         if (day < 1) {month--; if (month > 0) bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 12 часов
     case 12:
-    {
         hours = hours - 12;
         if (hours < 0) {day--; hours = 24 + hours;}
         if (day < 1) {month--; if (month > 0) bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufTime.setHMS(hours, minutes, 10);
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 1 день
     case 13:
-    {
         day--;
         if (day < 1) {month--; if (month > 0) bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 2 дня
     case 14:
-    {
         day = day - 2;
         if (day < 1) {month--; if (month > 0) bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
+
     //Напоминание за 1 неделю
     case 15:
-    {
         day = day - 7;
         if (day < 1) {month--; if (month > 0) bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         if (month < 1) {year--; month = 12; bufDate.setDate(year, month, 1); day = bufDate.daysInMonth();}
         bufDate.setDate(year, month, day);
-    }
-    //
     break;
+    //
     }
 
     remindTime = bufTime;

@@ -3,7 +3,6 @@
 
 
 
-
 RemindWindow::RemindWindow(QWidget *parent, QString name, QString dateAndTime, QColor color) :
     QDialog(parent),
     ui(new Ui::RemindWindow)
@@ -18,7 +17,6 @@ RemindWindow::RemindWindow(QWidget *parent, QString name, QString dateAndTime, Q
 
     setWindowTitle("Сработало напоминание!");
 }
-
 
 
 

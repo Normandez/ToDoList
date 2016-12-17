@@ -1,16 +1,9 @@
 #include "addnewtask.h"
-#include "mainwindow.h"
 #include "ui_addnewtask.h"
-#include <QMessageBox>
-#include <QDate>
 
 
 
-//ВНИМАНИЕ!!! Комментированные куски кода не трогать!
-
-
-
-
+//Конструктор добавления задачи
 AddNewTask::AddNewTask(QWidget *parent, QDate startDate, Event *objTask, bool *cancel) :
     QDialog(parent),
     ui(new Ui::AddNewTask)
@@ -59,9 +52,11 @@ AddNewTask::AddNewTask(QWidget *parent, QDate startDate, Event *objTask, bool *c
 
     setWindowTitle("Добавить задачу");
 }
+//
 
 
 
+//Конструктор изменения задачи
 AddNewTask::AddNewTask(QWidget *parent, Event *objTask, bool *cancel) :
     QDialog(parent),
     ui(new Ui::AddNewTask)
@@ -123,6 +118,7 @@ AddNewTask::AddNewTask(QWidget *parent, Event *objTask, bool *cancel) :
 
     setWindowTitle("Изменить задачу");
 }
+//
 
 
 

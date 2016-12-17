@@ -11,7 +11,7 @@ class AboutWindow;
 
 
 
-class AboutWindow : public QDialog
+class AboutWindow : public QDialog      //Класс формы окна "О программе"
 {
     Q_OBJECT
 
@@ -21,6 +21,7 @@ public:
 
 private:
     Ui::AboutWindow *ui;
+
 };
 
 #endif // ABOUTWINDOW_H

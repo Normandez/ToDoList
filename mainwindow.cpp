@@ -4,19 +4,6 @@
 #include "addnewtask.h"
 #include "remindwindow.h"
 #include "aboutwindow.h"
-#include <QMessageBox>
-#include <QTextCharFormat>
-#include <QFile>
-#include <QXmlStreamWriter>
-#include <QXmlStreamReader>
-#include <QXmlStreamAttribute>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QDebug>
-#include <QDir>
-#include <QFileDialog>
-#include <QCloseEvent>
 
 
 
@@ -25,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    ui->statusBar->showMessage("Добро пожаловать!", 5000);
 
     //Инициализация таблицы задач
     QStringList nameTableHeaders;
@@ -70,10 +59,6 @@ MainWindow::~MainWindow()
 
 
 
-//ВНИМАНИЕ!!! Комментированные куски кода не трогать!
-
-
-
 //Функция открытия окна добавления новой задачи
 void MainWindow::AddTask ()
 {
@@ -87,6 +72,7 @@ void MainWindow::AddTask ()
     if (*chkCancel)
     {
         task->destroyed();
+        ui->statusBar->showMessage("Добавление отменено!", 3000);
         return;
     }
     //
@@ -112,6 +98,11 @@ void MainWindow::AddTask ()
     ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки
 
     FillTaskTable();        //Заполнение таблицы
+
+    ui->pushButtonAddTask_OnTable->setVisible(false);
+    ui->labelAdd_OnTable->setVisible(false);
+
+    ui->statusBar->showMessage("Задача '" + task->GetNameOfTask() + "' успешно добавлена!", 7500);
 
     savedStatusChk = false;
 }
@@ -179,6 +170,7 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
             {
                 task->destroyed();
                 delete chkCancel;
+                ui->statusBar->showMessage("Изменение отменено!", 3000);
                 return;
             }
             //
@@ -214,6 +206,8 @@ void MainWindow::CustomTask(QString nameTask, QColor colorTask)
             FillTaskTable();
 
             savedStatusChk = false;
+
+            ui->statusBar->showMessage("Изменения успешно сохранены!", 7500);
 
             return;
         }
@@ -433,22 +427,22 @@ void MainWindow::FillTaskTable()
         tableItemRepeat->setText(repeat);
         //Расшифровка напоминания
         remind = QString::number(eventsByPointer[i]->GetRemindOfTask());
-        remind.replace("0","Нет");
-        remind.replace("1","За 1 минуту");
-        remind.replace("2","За 5 минут");
-        remind.replace("3","За 10 минут");
-        remind.replace("4","За 15 минут");
-        remind.replace("5","За 20 минут");
-        remind.replace("6","За 25 минут");
-        remind.replace("7","За 30 минут");
-        remind.replace("8","За 45 минут");
-        remind.replace("9","За 1 час");
-        remind.replace("10","За 2 часа");
-        remind.replace("11","За 3 часа");
-        remind.replace("12","За 12 часов");
-        remind.replace("13","За 1 день");
-        remind.replace("14","За 2 дня");
-        remind.replace("15","За 1 неделю");
+        if (remind == "0") remind.replace("0","Нет");
+        if (remind == "1") remind.replace("1","За 1 минуту");
+        if (remind == "2") remind.replace("2","За 5 минут");
+        if (remind == "3") remind.replace("3","За 10 минут");
+        if (remind == "4") remind.replace("4","За 15 минут");
+        if (remind == "5") remind.replace("5","За 20 минут");
+        if (remind == "6") remind.replace("6","За 25 минут");
+        if (remind == "7") remind.replace("7","За 30 минут");
+        if (remind == "8") remind.replace("8","За 45 минут");
+        if (remind == "9") remind.replace("9","За 1 час");
+        if (remind == "10") remind.replace("10","За 2 часа");
+        if (remind == "11") remind.replace("11","За 3 часа");
+        if (remind == "12") remind.replace("12","За 12 часов");
+        if (remind == "13") remind.replace("13","За 1 день");
+        if (remind == "14") remind.replace("14","За 2 дня");
+        if (remind == "15") remind.replace("15","За 1 неделю");
         tableItemRemind->setText(remind);
         //
         tableItemDescription->setText(eventsByPointer[i]->GetDescriptionOfTask());
@@ -506,9 +500,7 @@ void MainWindow::on_calendarWidget_clicked(const QDate &date)
         {
             //Обработка видимости кнопок добавления задачи на полях отображения информации
             ui->pushButtonAddTask_OnWidget->setVisible(true);
-            ui->pushButtonAddTask_OnTable->setVisible(true);
             ui->labelAdd_OnCalendar->setVisible(true);
-            ui->labelAdd_OnTable->setVisible(true);
             ui->listWidgetTasksForDay->clear();
             //
         }
@@ -538,101 +530,117 @@ void MainWindow::ReadFromFile(QString openFileName)
         Event *objXML;
 
         QFile fileXML(openFileName);
-        if(!fileXML.open(QFile::ReadOnly | QFile::Text))
-            QMessageBox::warning(this,
-                                  "Ошибка файла",
-                                  "Не удалось открыть файл",
-                                  QMessageBox::Ok);
-        else
+        QFileInfo fileInfo = fileXML;
+
+        try
         {
-            QXmlStreamReader xmlReader;
-            xmlReader.setDevice(&fileXML);
+            if(!fileXML.open(QFile::ReadOnly | QFile::Text)) throw 1;
+        }
+        catch (int)
+        {
+            fileName = "";
+            savedStatusChk = true;
+            ui->actionSave->setEnabled(false);
+            ui->actionClose->setEnabled(false);
+            ui->statusBar->showMessage("Ошибка!", 10000000);
+            QMessageBox *msg = new QMessageBox(this);
+            msg->setWindowTitle("Ошибка!");
+            msg->setText("Не удалось открыть файл!");
+            msg->exec();
+            ui->statusBar->clearMessage();
+            return;
+        }
 
-            while(!xmlReader.atEnd())
+        QXmlStreamReader xmlReader;
+        xmlReader.setDevice(&fileXML);
+
+        while(!xmlReader.atEnd())
+        {
+
+            if(xmlReader.isStartElement() && xmlReader.name() != "resources")
             {
-
-                if(xmlReader.isStartElement() && xmlReader.name() != "resources")
+                objXML = new Event ();
+                if(xmlReader.name() == "NameOfEvent")
                 {
-                    objXML = new Event ();
-                    if(xmlReader.name() == "NameOfEvent")
-                    {
-                        objXML->SetNameOfTask(xmlReader.readElementText());
-                        xmlReader.readNextStartElement();
-                    }
-                    if(xmlReader.name() == "StartDate")
-                    {
-                        objXML->SetStartDate(xmlReader.readElementText());
-                        xmlReader.readNextStartElement();
-                    }
-                    if(xmlReader.name() == "FinishDate")
-                    {
-                        objXML->SetFinishDate(xmlReader.readElementText());
-                        xmlReader.readNextStartElement();
-                    }
-                    if(xmlReader.name() == "StartTime")
-                    {
-                        objXML->SetStartTime(xmlReader.readElementText());
-                        xmlReader.readNextStartElement();
-                    }
-                    if(xmlReader.name() == "FinishTime")
-                    {
-                        objXML->SetFinishTime(xmlReader.readElementText());
-                        xmlReader.readNextStartElement();
-                    }
-
-                    if(xmlReader.name() == "RemindDate")
-                    {
-                        objXML->SetRemindDate(xmlReader.readElementText());
-                        xmlReader.readNextStartElement();
-                    }
-
-                    if(xmlReader.name() == "RemindTime")
-                    {
-                        objXML->SetRemindTime(xmlReader.readElementText());
-                        xmlReader.readNextStartElement();
-                    }
-
-                    if(xmlReader.name() == "RepeatOfTask")
-                    {
-                        objXML->SetRepeatOfTask(xmlReader.readElementText().toInt());
-                        xmlReader.readNextStartElement();
-                    }
-
-                    if(xmlReader.name() == "RemindOfTask")
-                    {
-                        objXML->SetRemindOfTask(xmlReader.readElementText().toInt());
-                        xmlReader.readNextStartElement();
-                    }
-
-                    if(xmlReader.name() == "RemindComplete")
-                    {
-                        objXML->SetRemindComplete(xmlReader.readElementText().toInt());
-                        xmlReader.readNextStartElement();
-                    }
-
-
-                    if(xmlReader.name() == "Description")
-                    {
-                        objXML->SetDescriptionOfTask(xmlReader.readElementText());
-                        xmlReader.readNextStartElement();
-                    }
-                    if(xmlReader.name() == "Color")
-                    {
-                        objXML->SetColor(xmlReader.readElementText());
-                        objXML->SetRemindComplete(0);
-                        xmlReader.readNextStartElement();
-                        eventsByPointer.push_back(objXML);
-                        ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
-                    }
+                    objXML->SetNameOfTask(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "StartDate")
+                {
+                    objXML->SetStartDate(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "FinishDate")
+                {
+                    objXML->SetFinishDate(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "StartTime")
+                {
+                    objXML->SetStartTime(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "FinishTime")
+                {
+                    objXML->SetFinishTime(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
                 }
 
-                xmlReader.readNext();
-            }
-            fileXML.close();
+                if(xmlReader.name() == "RemindDate")
+                {
+                    objXML->SetRemindDate(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
+                }
 
-            FillCalendar();
-            FillTaskTable();
+                if(xmlReader.name() == "RemindTime")
+                {
+                    objXML->SetRemindTime(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
+                }
+
+                if(xmlReader.name() == "RepeatOfTask")
+                {
+                    objXML->SetRepeatOfTask(xmlReader.readElementText().toInt());
+                    xmlReader.readNextStartElement();
+                }
+
+                if(xmlReader.name() == "RemindOfTask")
+                {
+                    objXML->SetRemindOfTask(xmlReader.readElementText().toInt());
+                    xmlReader.readNextStartElement();
+                }
+
+                if(xmlReader.name() == "RemindComplete")
+                {
+                    objXML->SetRemindComplete(xmlReader.readElementText().toInt());
+                    xmlReader.readNextStartElement();
+                }
+
+
+                if(xmlReader.name() == "Description")
+                {
+                    objXML->SetDescriptionOfTask(xmlReader.readElementText());
+                    xmlReader.readNextStartElement();
+                }
+                if(xmlReader.name() == "Color")
+                {
+                    objXML->SetColor(xmlReader.readElementText());
+                    objXML->SetRemindComplete(0);
+                    xmlReader.readNextStartElement();
+                    eventsByPointer.push_back(objXML);
+                    ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
+                }
+            }
+            xmlReader.readNext();
         }
+
+        ui->statusBar->showMessage("Файл '" + fileInfo.fileName() + "' открыть успешно!", 3000);
+
+        fileXML.close();
+
+        FillCalendar();
+        FillTaskTable();
+
         savedStatusChk = true;
 
         return;
@@ -644,9 +652,24 @@ void MainWindow::ReadFromFile(QString openFileName)
     {
         Event *objJSON;
         QFile fileJSON(openFileName);
-        if (!fileJSON.open(QIODevice::ReadOnly))
+        QFileInfo fileInfo = fileJSON;
+
+        try
         {
-            qWarning("Couldn't open save file.");
+            if(!fileJSON.open(QFile::ReadOnly | QFile::Text)) throw 1;
+        }
+        catch (int)
+        {
+            fileName = "";
+            savedStatusChk = true;
+            ui->actionSave->setEnabled(false);
+            ui->actionClose->setEnabled(false);
+            ui->statusBar->showMessage("Ошибка!", 10000000);
+            QMessageBox *msg = new QMessageBox(this);
+            msg->setWindowTitle("Ошибка!");
+            msg->setText("Не удалось открыть файл!");
+            msg->exec();
+            ui->statusBar->clearMessage();
             return;
         }
 
@@ -679,6 +702,8 @@ void MainWindow::ReadFromFile(QString openFileName)
             ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
 
         }
+        ui->statusBar->showMessage("Файл '" + fileInfo.fileName() + "' открыть успешно!", 3000);
+
         fileJSON.close();
 
         FillCalendar();
@@ -701,7 +726,25 @@ void MainWindow::SaveToFile(QString saveFileName)
     if (saveFileName.indexOf(".xml") > 0)
     {
         QFile fileXML(saveFileName);
-        fileXML.open(QIODevice::WriteOnly | QIODevice::Truncate);
+
+        try
+        {
+            if(!fileXML.open(QFile::ReadOnly | QFile::Text)) throw 1;
+        }
+        catch (int)
+        {
+            fileName = "";
+            savedStatusChk = true;
+            ui->actionSave->setEnabled(false);
+            ui->actionClose->setEnabled(false);
+            ui->statusBar->showMessage("Ошибка!", 10000000);
+            QMessageBox *msg = new QMessageBox(this);
+            msg->setWindowTitle("Ошибка!");
+            msg->setText("Не удалось открыть файл!");
+            msg->exec();
+            ui->statusBar->clearMessage();
+            return;
+        }
 
         QXmlStreamWriter xmlWriter(&fileXML);
         xmlWriter.setAutoFormatting(true);
@@ -733,6 +776,8 @@ void MainWindow::SaveToFile(QString saveFileName)
 
         savedStatusChk = true;
 
+        ui->statusBar->showMessage("Данные сохранены успешно!", 3000);
+
         return;
     }
     //
@@ -741,9 +786,23 @@ void MainWindow::SaveToFile(QString saveFileName)
     if (saveFileName.indexOf(".json") > 0)
     {
         QFile fileJSON(saveFileName);
-        if (!fileJSON.open(QIODevice::WriteOnly | QIODevice::Truncate))
+
+        try
         {
-            qWarning("Couldn't open save file.");
+            if(!fileJSON.open(QFile::ReadOnly | QFile::Text)) throw 1;
+        }
+        catch (int)
+        {
+            fileName = "";
+            savedStatusChk = true;
+            ui->actionSave->setEnabled(false);
+            ui->actionClose->setEnabled(false);
+            ui->statusBar->showMessage("Ошибка!", 10000000);
+            QMessageBox *msg = new QMessageBox(this);
+            msg->setWindowTitle("Ошибка!");
+            msg->setText("Не удалось открыть файл!");
+            msg->exec();
+            ui->statusBar->clearMessage();
             return;
         }
 
@@ -771,6 +830,8 @@ void MainWindow::SaveToFile(QString saveFileName)
         fileJSON.close();
 
         savedStatusChk = true;
+
+        ui->statusBar->showMessage("Данные сохранены успешно!", 3000);
 
         return;
     }
@@ -873,15 +934,15 @@ void MainWindow::DeleteTask(QString nameTask, QColor colorTask)
             }
             //
 
+            ui->statusBar->showMessage("Задача '" + eventsByPointer[i]->GetNameOfTask() + "' успешно удалена!", 7500);
+
             eventsByPointer[i]->destroyed();        //Удаление самого указателя (объекта)
             eventsByPointer.remove(i);      //Удаление конкретного элемента из вектора
 
             //Обработка видимости кнопок добавления задачи на полях отображения информации
             ui->listWidgetTasksForDay->clear();
             ui->pushButtonAddTask_OnWidget->setVisible(true);
-            ui->pushButtonAddTask_OnTable->setVisible(true);
             ui->labelAdd_OnCalendar->setVisible(true);
-            ui->labelAdd_OnTable->setVisible(true);
             ui->listWidgetTasksForDay->clear();
             //
             FillCalendar();
@@ -890,6 +951,12 @@ void MainWindow::DeleteTask(QString nameTask, QColor colorTask)
             FillTaskTable();
 
             savedStatusChk = false;
+
+            if (ui->tableWidgetMainTable->rowCount() == 0)
+            {
+                ui->pushButtonAddTask_OnTable->setVisible(true);
+                ui->labelAdd_OnTable->setVisible(true);
+            }
 
             return;
         }
@@ -972,7 +1039,7 @@ void MainWindow::DeleteAllTasks ()
     while (i >= 0) {ui->tableWidgetMainTable->removeRow(i); i--;}
     eventsByPointer.clear();
 
-    savedStatusChk = false;
+    savedStatusChk = true;
 }
 //
 
@@ -984,6 +1051,8 @@ void MainWindow::on_actionClose_triggered()
     //Проверка сохранения данных
     if (!savedStatusChk)
     {
+        ui->statusBar->showMessage("Внимание!", 10000000);
+
         //Инициализация окна сообщения
         QMessageBox *msg = new QMessageBox (this);
         msg->setWindowTitle("Внимание!");
@@ -999,13 +1068,16 @@ void MainWindow::on_actionClose_triggered()
         switch (dialogResult)
         {
         case 0:      //Нажата кнопка "Да"
-            if (fileName.length() != 0) on_actionSave_triggered();
-                else on_actionSaveAs_triggered();
+            if (fileName.length() != 0) {on_actionSave_triggered(); ui->statusBar->clearMessage();}
+                else {on_actionSaveAs_triggered(); ui->statusBar->clearMessage();}
 
-            break;
+        break;
         case 1:       //Нажата кнопка "Нет"
-            break;
+            ui->statusBar->clearMessage();
+        break;
         case 2:     //Нажата кнопка "Отмена"
+            ui->statusBar->clearMessage();
+
             return;
         }
         //
@@ -1073,6 +1145,8 @@ void MainWindow::on_actionToday_triggered()
     QDate today = QDate::currentDate();;
     ui->calendarWidget->setSelectedDate(today);
     ui->calendarWidget->setFocus();
+
+    ui->statusBar->showMessage("Текущая дата: " + today.toString("dd.MM.yyyy") + " | Текущее время: " + QTime::currentTime().toString("hh:mm"), 10000);
 
     on_calendarWidget_clicked(today);       //Выдача списка задач если они есть
 }
@@ -1168,6 +1242,10 @@ void MainWindow::closeEvent(QCloseEvent *e)
     //Проверка сохранения данных
     if (!savedStatusChk)
     {
+        if (ui->tableWidgetMainTable->rowCount() == 0) e->accept();     //Если задач нет (ведь нечего сохранять)
+
+        ui->statusBar->showMessage("Внимание!", 10000000);
+
         //Инициализация окна сообщения
         QMessageBox *msg = new QMessageBox (this);
         msg->setWindowTitle("Внимание!");
@@ -1183,14 +1261,17 @@ void MainWindow::closeEvent(QCloseEvent *e)
         switch (dialogResult)
         {
         case 0:      //Нажата кнопка "Да"
-            if (fileName.length() != 0) on_actionSave_triggered();
-                else on_actionSaveAs_triggered();
+            if (fileName.length() != 0) {on_actionSave_triggered(); ui->statusBar->clearMessage();}
+                else {on_actionSaveAs_triggered(); ui->statusBar->clearMessage();}
 
-            break;
+        break;
         case 1:       //Нажата кнопка "Нет"
-            break;
+            ui->statusBar->clearMessage();
+        break;
         case 2:     //Нажата кнопка "Отмена"
             e->ignore();
+
+            ui->statusBar->clearMessage();
 
             return;
         }
@@ -1202,7 +1283,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 
 
-//Меню Помощь->О программе
+//Меню Помощь -> О программе
 void MainWindow::on_actionAbout_triggered()
 {
     AboutWindow *wndAbout = new AboutWindow (this);

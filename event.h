@@ -7,30 +7,30 @@
 
 
 
-class Event : public QObject     //класс события
+class Event : public QObject     //Класс задачи
 {
     Q_OBJECT
 
 private:
-    QString nameOfTask;
-    QDate startDate;
-    QDate finishDate;
-    QTime startTime;
-    QTime finishTime;
-    short repeatOfTask:3;
-    short remindOfTask:5;
-    short remindComplete = 0;
-    QDate remindDate;
-    QTime remindTime;
-    QString descriptionOfTask;      //описание задачи
-    QColor color;
+    QString nameOfTask;     //Название задачи
+    QDate startDate;        //Дата начала
+    QDate finishDate;       //Дата окончания
+    QTime startTime;        //Время начала
+    QTime finishTime;       //Время окончания
+    short repeatOfTask;     //Код повторения
+    short remindOfTask;     //Код напоминания
+    short remindComplete = 0;       //Статус напоминания (совершено/несовершено)
+    QDate remindDate;       //Дата напоминания
+    QTime remindTime;       //Время напоминания
+    QString descriptionOfTask;      //Описание задачи
+    QColor color;       //Цвет задачи
 
 public:
-    Event(); //конструктор без комментария
+    Event(); //Пустой конструктор
     ~Event (){}
     void SetData (QString name, QDate sDate, QDate fDate,
-                  QTime sTime, QTime fTime, short repeatCode, short remindCode, QString descript);
-    void SetColor (QColor clr);
+                  QTime sTime, QTime fTime, short repeatCode, short remindCode, QString descript);      //Установка всех данных задачи в переменные класса
+    void SetColor (QColor clr);     //Установка цвета
     QString GetNameOfTask();
     QDate GetStartDate();
     QDate GetFinishDate();
@@ -53,11 +53,11 @@ public:
     void SetRepeatOfTask (short repeatCode);
     void SetRemindOfTask (short remindCode);
     void SetRemindComplete (short code);
-    void SetRemind ();
+    void SetRemind ();      //Установить напоминание
     void SetRemindDate (QString date);
     void SetRemindTime (QString time);
     void SetDescriptionOfTask(QString);
+
 };
-//
 
 #endif // EVENT_H

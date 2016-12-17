@@ -3,6 +3,8 @@
 
 #include "event.h"
 #include <QDialog>
+#include <QMessageBox>
+#include <QDate>
 
 
 
@@ -12,13 +14,20 @@ class AddNewTask;
 
 
 
-class AddNewTask : public QDialog
+class AddNewTask : public QDialog       //Класс формы окна "Добавить/Изменить задачу"
 {
     Q_OBJECT
 
+private:
+    Ui::AddNewTask *ui;
+
+    Event *obj;     //Задача
+    QDate sDate;        //Дата начала задачи
+    bool *chkCancel;        //Проверка статуса отмены
+
 public:
-    explicit AddNewTask(QWidget *parent, QDate startDate, Event *objTask, bool *cancel);
-    explicit AddNewTask(QWidget *parent, Event *objTask, bool *cancel);
+    explicit AddNewTask(QWidget *parent, QDate startDate, Event *objTask, bool *cancel);        //Конструктор для добавления задачи
+    explicit AddNewTask(QWidget *parent, Event *objTask, bool *cancel);         //Конструктор для изменения задачи
     ~AddNewTask();
 
 private slots:
@@ -36,12 +45,6 @@ private slots:
 
     void on_lineEditName_textChanged(const QString &arg1);
 
-private:
-    Ui::AddNewTask *ui;
-
-    Event *obj;
-    QDate sDate;
-    bool *chkCancel;
 };
 
 #endif // ADDNEWTASK_H

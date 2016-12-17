@@ -7,6 +7,19 @@
 #include <QVector>
 #include <QTime>
 #include <QTimer>
+#include <QMessageBox>
+#include <QTextCharFormat>
+#include <QFile>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
+#include <QXmlStreamAttribute>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QDebug>
+#include <QDir>
+#include <QFileDialog>
+#include <QCloseEvent>
 
 
 
@@ -16,28 +29,38 @@ class MainWindow;
 
 
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow       //Класс формы главного окна программы
 {
     Q_OBJECT
+
+private:
+    Ui::MainWindow *ui;
+
+    bool doubleClickChk = false;        //Проверка двойного клика
+    bool savedStatusChk = true;     //Проверка несохраненных изменений
+    QVector <Event*> eventsByPointer;       //Вектор задач
+
+    QString fileName = "";      //Имя файла для автоматического сохранения
 
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void AddTask();
-    void CustomTask(QString nameTask, QColor colorTask);
-    void FillCalendar();
-    void FillListUnderCalendar(Event *task, QColor color);
-    void FillTaskTable();
-    void ReadFromFile (QString openFileName);
-    void SaveToFile (QString saveFileName);
-    void DeleteTask (QString nameTask, QColor colorTask);
-    void DeleteAllTasks ();
-    void SelectCurrentTask (QString *nameTask, QColor *colorTask);
 
-    QTimer *mainTimer;
+    void AddTask();     //Добавить задачу
+    void CustomTask(QString nameTask, QColor colorTask);        //Изменить задачу
+    void FillCalendar();                                    //Заполнить календарь
+    void FillListUnderCalendar(Event *task, QColor color);      //Заполнить список под календарем
+    void FillTaskTable();                                   //Заполнить таблицу задач
+    void ReadFromFile (QString openFileName);             //Считать данные из файла
+    void SaveToFile (QString saveFileName);             //Записать данные в файл
+    void DeleteTask (QString nameTask, QColor colorTask);       //Удалить задачу
+    void DeleteAllTasks ();                             //Удалить все задачи
+    void SelectCurrentTask (QString *nameTask, QColor *colorTask);      //Выбрать конекретную задачу
+
+    QTimer *mainTimer;                          //Таймер напоминания
 
 protected:
-    virtual void closeEvent(QCloseEvent *e);
+    virtual void closeEvent(QCloseEvent *e);        //Событие закрытия программы
 
 private slots:
     void on_pushButtonAddTask_OnWidget_clicked();
@@ -81,14 +104,6 @@ private slots:
 public slots:
     void mainTimer_overflow();
 
-private:
-    Ui::MainWindow *ui;
-
-    bool doubleClickChk = false;
-    bool savedStatusChk = true;
-    QVector <Event*> eventsByPointer;
-
-    QString fileName = "";
 };
 
 #endif // MAINWINDOW_H

@@ -74,7 +74,7 @@ background-color: rgb(255, 255, 222);
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap resource="icons.qrc">:/AllIcons/AboutImage.jpg</pixmap>
+    <pixmap resource="icons.qrc">:/AllIcons/AboutImage.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>

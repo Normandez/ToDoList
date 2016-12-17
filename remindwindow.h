@@ -5,17 +5,18 @@
 
 
 
-
 namespace Ui {
 class RemindWindow;
 }
 
 
 
-
-class RemindWindow : public QDialog
+class RemindWindow : public QDialog     //Класс формы окна напоминания
 {
     Q_OBJECT
+
+private:
+    Ui::RemindWindow *ui;
 
 public:
     explicit RemindWindow(QWidget *parent, QString name, QString dateAndTime, QColor color);
@@ -24,8 +25,6 @@ public:
 private slots:
     void on_pushButtonOK_clicked();
 
-private:
-    Ui::RemindWindow *ui;
 };
 
 #endif // REMINDWINDOW_H
