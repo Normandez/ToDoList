@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/new">
+        <file>help.htm</file>
+        <file>help.files/colorschememapping.xml</file>
+        <file>help.files/filelist.xml</file>
+        <file>help.files/image001.png</file>
+        <file>help.files/image002.jpg</file>
+        <file>help.files/image003.png</file>
+        <file>help.files/image004.png</file>
+        <file>help.files/image005.jpg</file>
+        <file>help.files/image006.png</file>
+        <file>help.files/image007.jpg</file>
+        <file>help.files/image008.png</file>
+        <file>help.files/image009.png</file>
+        <file>help.files/image010.jpg</file>
+        <file>help.files/image011.png</file>
+        <file>help.files/image012.jpg</file>
+        <file>help.files/image013.png</file>
+        <file>help.files/image014.jpg</file>
+        <file>help.files/image015.png</file>
+        <file>help.files/image016.jpg</file>
+        <file>help.files/image017.png</file>
+        <file>help.files/image018.png</file>
+        <file>help.files/image019.png</file>
+        <file>help.files/image020.png</file>
+        <file>help.files/image021.jpg</file>
+        <file>help.files/image022.png</file>
+        <file>help.files/preview.wmf</file>
+        <file>help.files/themedata.thmx</file>
+    </qresource>
+</RCC>

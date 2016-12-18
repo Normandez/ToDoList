@@ -4,6 +4,7 @@
 #include "addnewtask.h"
 #include "remindwindow.h"
 #include "aboutwindow.h"
+#include "helpwindow.h"
 
 
 
@@ -634,7 +635,7 @@ void MainWindow::ReadFromFile(QString openFileName)
             xmlReader.readNext();
         }
 
-        ui->statusBar->showMessage("Файл '" + fileInfo.fileName() + "' открыть успешно!", 3000);
+        ui->statusBar->showMessage("Файл '" + fileInfo.fileName() + "' открыт успешно!", 3000);
 
         fileXML.close();
 
@@ -702,7 +703,7 @@ void MainWindow::ReadFromFile(QString openFileName)
             ui->tableWidgetMainTable->insertRow(ui->tableWidgetMainTable->rowCount());      //Вставка строки в таблицу
 
         }
-        ui->statusBar->showMessage("Файл '" + fileInfo.fileName() + "' открыть успешно!", 3000);
+        ui->statusBar->showMessage("Файл '" + fileInfo.fileName() + "' открыт успешно!", 3000);
 
         fileJSON.close();
 
@@ -729,7 +730,7 @@ void MainWindow::SaveToFile(QString saveFileName)
 
         try
         {
-            if(!fileXML.open(QFile::ReadOnly | QFile::Text)) throw 1;
+            if(!fileXML.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) throw 1;
         }
         catch (int)
         {
@@ -789,7 +790,7 @@ void MainWindow::SaveToFile(QString saveFileName)
 
         try
         {
-            if(!fileJSON.open(QFile::ReadOnly | QFile::Text)) throw 1;
+            if(!fileJSON.open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) throw 1;
         }
         catch (int)
         {
@@ -1288,5 +1289,15 @@ void MainWindow::on_actionAbout_triggered()
 {
     AboutWindow *wndAbout = new AboutWindow (this);
     wndAbout->exec();
+}
+//
+
+
+
+//Меню Помощь -> Справка
+void MainWindow::on_actionHelp_triggered()
+{
+    HelpWindow *helpWnd = new HelpWindow (this);
+    helpWnd->exec();
 }
 //
